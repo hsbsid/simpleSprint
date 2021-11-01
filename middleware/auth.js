@@ -19,11 +19,11 @@ module.exports = async function (req, res, next) {
       }
 
       const id = decoded.user.id;
-      let user = await User.findById(id);
+      let user = await User.findById(id).select('-password');
 
       //if user is found, add to request, else throw error
       if (user) {
-        req.user = decoded.user;
+        req.user = user;
         next();
       } else {
         return res.status(401).json({ errors: [{ msg: 'Access denied' }] });

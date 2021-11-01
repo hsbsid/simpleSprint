@@ -8,7 +8,9 @@ const validationCheck = require('../../middleware/validationCheck');
 
 const User = require('../../models/User');
 
-//Sign Up Endpoint
+// @route  POST api/users
+// @desc   Add new user to DB & get token
+// @access Public
 router.post(
   '/',
   [
@@ -63,7 +65,7 @@ router.post(
       );
     } catch (err) {
       console.log(err);
-      return res.status(500).send('Server Error');
+      res.status(500).send('Server Error');
     }
   }
 );

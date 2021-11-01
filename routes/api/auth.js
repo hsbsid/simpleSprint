@@ -5,13 +5,18 @@ const validationCheck = require('../../middleware/validationCheck');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const auth = require('../../middleware/auth');
+const bcrypt = require('bcrypt');
 
 // @route  GET api/auth
 // @desc   check authorization
 // @access Private
-router.get('/', auth, async (req, res) => res.send('Auth Route'));
+router.get('/', auth, async (req, res) => {
+  res.json(req.user);
+});
 
-//log in endpoint
+// @route  POST api/auth
+// @desc   check credentials and get token
+// @access Public
 router.post(
   '/',
   [
@@ -64,7 +69,8 @@ router.post(
         }
       );
     } catch (err) {
-      console.log('cant log in');
+      console.log(err);
+      res.status(500).send('Server Error');
     }
   }
 );
