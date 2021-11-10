@@ -4,6 +4,7 @@ import Navbar from './components/layout/Navbar';
 import { Link, BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import Alert from './components/auth/Alert';
 
 //redux
 import store from './store';
@@ -14,6 +15,7 @@ const App = () => (
     <Router>
       <Fragment>
         <Navbar />
+        <Alert />
         <div className='container'>
           <Switch>
             <Route exact path='/login' component={Login} />
