@@ -26,12 +26,12 @@ export const register =
         type: REGISTER_SUCCESS,
         payload: res.data,
       });
-      console.log(res.data);
+      dispatch(setAlert('Welcome!', 'success', 3000));
     } catch (error) {
       const resErrors = error.response.data.errors;
 
       resErrors.forEach((e) => {
-        setAlert(e.msg, 'error', 5000);
+        dispatch(setAlert(e.msg, 'error', 5000));
       });
 
       dispatch({
