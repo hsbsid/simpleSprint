@@ -1,0 +1,17 @@
+.authContainer {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.authForm {
+  background-color: #fff;
+  padding: 2em;
+  border-radius: 1em;
+  max-height: 500px;
+  transition: max-height 2s ease;
+}
+
+.nav-link.active .nav-link {
+  color: #fff;
+}

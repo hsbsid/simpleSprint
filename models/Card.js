@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const CardSchema = new mongoose.Schema({
+  board: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'board',
+    required: true,
+  },
   title: {
     type: String,
     required: true,
@@ -11,25 +16,14 @@ const CardSchema = new mongoose.Schema({
       ref: 'user',
     },
   ],
-  swimlanes: [
-    {
-      title: {
-        type: String,
-        required: true,
-      },
-      users: [
-        {
-          user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'user',
-          },
-        },
-      ],
-    },
-  ],
-  columns: {
-    type: [String],
-    default: [],
+  swimlane: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'board.swimlanes',
+    required: true,
+  },
+  column: {
+    type: String,
+    required: true,
   },
   date: {
     type: Date,

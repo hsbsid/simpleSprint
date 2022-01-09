@@ -1,0 +1,16 @@
+$snow: #fff3f0;
+$purple: #5f4bb6;
+$pink: #f487b6;
+
+body {
+  background: rgb(244, 135, 182);
+  background: linear-gradient(
+    4deg,
+    rgba(244, 135, 182, 1) 0%,
+    rgba(95, 75, 182, 1) 100%
+  );
+  font-family: 'Ubuntu', sans-serif !important;
+}
+
+@import './navbar.scss';
+@import './auth.scss';

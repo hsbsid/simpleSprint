@@ -1,13 +1,13 @@
-import { v4 as uuid } from 'uuid';
-import { SET_ALERT, REMOVE_ALERT } from '../actions/types';
+import { SET_ALERT, REMOVE_ALERT } from './types';
+import { v4 } from 'uuid';
 
-export const setAlert = (msg, alertType, duration) => (dispatch) => {
-  const id = uuid();
+export const setAlert = (msg, alertType) => (dispatch) => {
+  const id = v4();
+
   dispatch({
     type: SET_ALERT,
     payload: { msg, alertType, id },
   });
 
-  //remove the same alert based on duration
-  setTimeout(() => dispatch({ type: REMOVE_ALERT, payload: id }), duration);
+  setTimeout(() => dispatch({ type: REMOVE_ALERT, payload: id }), 1200);
 };

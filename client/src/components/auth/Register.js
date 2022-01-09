@@ -1,14 +1,20 @@
 import React, { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Input, Button } from 'antd';
-import axios from 'axios';
+import { Link, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { setAlert } from '../../actions/alert';
 import { register } from '../../actions/auth';
-import { connect } from 'react-redux';
-import Alert from './Alert';
+import PropTypes from 'prop-types';
 
-const Register = ({ setAlert, register }) => {
+//components
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Stack from 'react-bootstrap/Stack';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Nav from 'react-bootstrap/Nav';
+
+const Register = ({ setAlert, register, auth }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,55 +24,89 @@ const Register = ({ setAlert, register }) => {
 
   const { name, email, password1, password2 } = formData;
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    if (password1 != password2) {
-      setAlert('passwords do not match', 'error', 5000);
-    } else {
-      await register({ name, email, password: password1 });
-    }
-  };
-
   const onChange = (e) => {
-    e.preventDefault();
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password1 != password2) {
+      setAlert('Passwords do not match', 'error');
+    } else {
+      register({ name, email, password: password1 });
+    }
+  };
+
+  //if the user is logged in, redirect them
+  if (auth.authenticated) {
+    return <Redirect to='/dashboard' />;
+  }
+
   return (
     <Fragment>
-      <h1>Sign Up</h1>
-      <form onSubmit={(e) => onSubmit(e)}>
-        <Input
-          name='name'
-          placeholder='Name'
-          value={name}
-          onChange={onChange}
-        />
-        <Input
-          name='email'
-          placeholder='Email'
-          value={email}
-          onChange={onChange}
-        />
-        <Input
-          name='password1'
-          placeholder='Password'
-          type='password'
-          value={password1}
-          onChange={onChange}
-        />
-        <Input
-          name='password2'
-          placeholder='Confirm Password'
-          type='password'
-          value={password2}
-          onChange={onChange}
-        />
-        <Button htmlType='submit'>Sign Up</Button>
-        <p>
-          Already have an account? <Link to='/login'>Log In</Link>
-        </p>
-      </form>
+      <Container className='authContainer'>
+        <Col></Col>
+        <Col xs={5}>
+          <Stack gap={3} className='authForm'>
+            <Nav
+              variant='pills'
+              defaultActiveKey={window.location.pathname}
+              className='justify-content-center'
+            >
+              <Nav.Link eventKey='/login'>
+                <Link className='nav-link' to='/login'>
+                  Log In
+                </Link>
+              </Nav.Link>
+              <Nav.Link eventKey='/signup'>
+                <Link className='nav-link' to='/signup'>
+                  Sign Up
+                </Link>
+              </Nav.Link>
+            </Nav>
+
+            <h1>Sign Up</h1>
+
+            <form onSubmit={(e) => onSubmit(e)}>
+              <Stack gap={1}>
+                <Form.Control
+                  name='name'
+                  placeholder='Name'
+                  value={name}
+                  onChange={onChange}
+                />
+                <Form.Control
+                  name='email'
+                  placeholder='Email'
+                  value={email}
+                  onChange={onChange}
+                />
+                <Form.Control
+                  name='password1'
+                  placeholder='Password'
+                  type='password'
+                  value={password1}
+                  onChange={onChange}
+                />
+                <Form.Control
+                  name='password2'
+                  placeholder='Confirm Password'
+                  type='password'
+                  value={password2}
+                  onChange={onChange}
+                />
+              </Stack>
+              <Button type='submit'>Sign Up</Button>
+            </form>
+
+            <p>
+              Already have an account? <Link to='/login'>Log in</Link>
+            </p>
+          </Stack>
+        </Col>
+        <Col></Col>
+      </Container>
     </Fragment>
   );
 };
@@ -74,6 +114,9 @@ const Register = ({ setAlert, register }) => {
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
 };
 
-export default connect(null, { setAlert, register })(Register);
+const mapStateToProps = (state) => ({ auth: state.auth });
+
+export default connect(mapStateToProps, { setAlert, register })(Register);

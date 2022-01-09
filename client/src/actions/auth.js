@@ -1,42 +1,115 @@
+import axios from 'axios';
 import {
-  LOGIN,
+  AUTH_FAIL,
+  AUTH_SUCCESS,
+  SET_ALERT,
+  USER_LOADED,
+  AUTH_ERROR,
   LOGOUT,
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  CHECK_AUTH,
 } from '../actions/types';
 import { setAlert } from './alert';
-import axios from 'axios';
+import setAuthToken from '../utils/setAuthToken';
+
+export const loadUser = () => async (dispatch) => {
+  //if there is a token in local storage, add axios header globally
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
+
+  //try to get the user
+  try {
+    const res = await axios.get('/api/auth');
+
+    //no errors so dispatch the user loaded. res.data is the user id, pass to redux state
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: AUTH_FAIL,
+    });
+  }
+};
 
 export const register =
   ({ name, email, password }) =>
   async (dispatch) => {
-    console.log('REGISTER');
-    const newUser = { name, email, password };
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const body = JSON.stringify({ name, email, password });
+
+    //register the user
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
-      const body = JSON.stringify(newUser);
       const res = await axios.post('/api/users', body, config);
 
       dispatch({
-        type: REGISTER_SUCCESS,
+        type: AUTH_SUCCESS,
         payload: res.data,
       });
-      dispatch(setAlert('Welcome!', 'success', 3000));
-    } catch (error) {
-      const resErrors = error.response.data.errors;
 
-      resErrors.forEach((e) => {
-        dispatch(setAlert(e.msg, 'error', 5000));
+      //load the user into state based on token
+      dispatch(loadUser());
+    } catch (err) {
+      const errors = err.response.data.errors;
+
+      if (errors) {
+        errors.forEach((e) => {
+          dispatch(setAlert(e.msg, 'danger'));
+        });
+      }
+
+      dispatch({
+        type: AUTH_FAIL,
+      });
+    }
+  };
+
+export const login =
+  ({ email, password }) =>
+  async (dispatch) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const body = {
+      email,
+      password,
+    };
+
+    //try to log in using credentials
+    try {
+      const res = await axios.post('/api/auth', body, config);
+
+      //dispatch success with auth token as payload
+      dispatch({
+        type: AUTH_SUCCESS,
+        payload: res.data,
+      });
+
+      //load the user into state based on token
+      dispatch(loadUser());
+    } catch (err) {
+      const errors = err.response.data.errors;
+
+      errors.forEach((e) => {
+        dispatch(setAlert(e.msg, 'danger'));
       });
 
       dispatch({
-        type: REGISTER_FAIL,
+        type: AUTH_ERROR,
       });
-      console.log(error);
     }
   };
+
+export const logout = () => (dispatch) => {
+  dispatch({
+    type: LOGOUT,
+  });
+};

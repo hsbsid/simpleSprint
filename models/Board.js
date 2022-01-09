@@ -13,7 +13,7 @@ const BoardSchema = new mongoose.Schema({
       },
       permission: {
         type: String,
-        default: 'read',
+        default: 'Read',
       },
     },
   ],
@@ -35,9 +35,8 @@ const BoardSchema = new mongoose.Schema({
   ],
   columns: [
     {
-      name: {
-        type: String,
-      },
+      type: String,
+      required: true,
     },
   ],
   date: {
