@@ -1,0 +1,48 @@
+#Dashboard {
+  background: white;
+  max-height: 100vh;
+  max-width: 100vw;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+
+  div.row:nth-of-type(1) {
+    height: 10vh;
+  }
+
+  div.row:nth-of-type(2) {
+    height: 90vh;
+  }
+}
+
+#Sidebar {
+  padding: 2em !important;
+  border-right: 2px solid $lightgrey;
+  background: $lightgrey;
+}
+
+#DisplayArea {
+  display: flex;
+  padding: 2em !important;
+  overflow-x: scroll;
+
+  div.boardColumn {
+    padding: 2px;
+    div {
+      background: $lightgrey;
+      border-radius: 5px;
+      min-height: 100px;
+    }
+  }
+
+  div.boardColumn:last-of-type div {
+    background: none;
+    border: 3px dotted grey;
+
+    &:hover {
+      background: $lightgrey;
+      cursor: pointer;
+      border: 3px dotted $lightgrey;
+    }
+  }
+}

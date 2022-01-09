@@ -15,8 +15,8 @@ const Navbar = ({ auth, logout }) => {
   if (!auth.loading && auth.authenticated) {
     return (
       <Fragment>
-        <BSNavbar sticky='top' className='navbar-light'>
-          <Container>
+        <BSNavbar sticky='top' className='navbar-light' id='Navbar'>
+          <Container className='d-flex flex-row justify-content-between'>
             <BSNavbar.Brand>simpleSprint</BSNavbar.Brand>
             <Nav className='me-auto'>
               <Nav.Link key={1}>

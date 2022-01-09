@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { login } from '../../actions/auth';
 
 //components
+import AuthNav from './AuthNav';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -43,23 +44,8 @@ const Login = ({ auth, login }) => {
         <Col></Col>
         <Col xs={5}>
           <Stack gap={3} className='authForm'>
-            <Nav
-              variant='pills'
-              defaultActiveKey={window.location.pathname}
-              className='justify-content-center'
-            >
-              <Nav.Link eventKey='/login'>
-                <Link className='nav-link' to='/login'>
-                  Log In
-                </Link>
-              </Nav.Link>
-              <Nav.Link eventKey='/signup'>
-                <Link className='nav-link' to='/signup'>
-                  Sign Up
-                </Link>
-              </Nav.Link>
-            </Nav>
-            <h1>Login</h1>
+            <AuthNav />
+            <h2>Login</h2>
 
             <form onSubmit={(e) => onSubmit(e)}>
               <Stack gap={1}>
@@ -80,9 +66,17 @@ const Login = ({ auth, login }) => {
               <Button type='submit'>Login</Button>
             </form>
 
-            <p>
+            <span>
               New to simpleSprint? <Link to='/signup'>Sign up</Link>
-            </p>
+            </span>
+
+            <footer>
+              <h4 className='logo'>simpleSprint</h4>
+              <a href='https://github.com/hsbsid'>
+                <span>by Haseeb Siddiqui </span>
+                <i class='fab fa-github'></i>
+              </a>
+            </footer>
           </Stack>
         </Col>
         <Col></Col>

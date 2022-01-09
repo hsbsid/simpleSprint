@@ -13,6 +13,7 @@ import Stack from 'react-bootstrap/Stack';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
+import AuthNav from './AuthNav';
 
 const Register = ({ setAlert, register, auth }) => {
   const [formData, setFormData] = useState({
@@ -34,6 +35,7 @@ const Register = ({ setAlert, register, auth }) => {
     if (password1 != password2) {
       setAlert('Passwords do not match', 'error');
     } else {
+      //register action, if register is successful, show an alert
       register({ name, email, password: password1 });
     }
   };
@@ -49,24 +51,9 @@ const Register = ({ setAlert, register, auth }) => {
         <Col></Col>
         <Col xs={5}>
           <Stack gap={3} className='authForm'>
-            <Nav
-              variant='pills'
-              defaultActiveKey={window.location.pathname}
-              className='justify-content-center'
-            >
-              <Nav.Link eventKey='/login'>
-                <Link className='nav-link' to='/login'>
-                  Log In
-                </Link>
-              </Nav.Link>
-              <Nav.Link eventKey='/signup'>
-                <Link className='nav-link' to='/signup'>
-                  Sign Up
-                </Link>
-              </Nav.Link>
-            </Nav>
+            <AuthNav />
 
-            <h1>Sign Up</h1>
+            <h2>Sign Up</h2>
 
             <form onSubmit={(e) => onSubmit(e)}>
               <Stack gap={1}>
@@ -100,9 +87,17 @@ const Register = ({ setAlert, register, auth }) => {
               <Button type='submit'>Sign Up</Button>
             </form>
 
-            <p>
+            <span>
               Already have an account? <Link to='/login'>Log in</Link>
-            </p>
+            </span>
+
+            <footer>
+              <h4 className='logo'>simpleSprint</h4>
+              <a href='https://github.com/hsbsid'>
+                <span>by Haseeb Siddiqui </span>
+                <i class='fab fa-github'></i>
+              </a>
+            </footer>
           </Stack>
         </Col>
         <Col></Col>

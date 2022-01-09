@@ -1,9 +1,7 @@
 @import '~antd/dist/antd.css';
 @import './styles/main';
+@import './styles/fontawesome/fontawesome_all.css';
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;600;700;800;900&display=swap');
-
-$primary: $purple;
-$danger: $pink;
 
 .App {
   text-align: center;

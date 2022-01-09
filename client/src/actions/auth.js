@@ -54,6 +54,8 @@ export const register =
 
       //load the user into state based on token
       dispatch(loadUser());
+
+      return true;
     } catch (err) {
       const errors = err.response.data.errors;
 
@@ -66,6 +68,8 @@ export const register =
       dispatch({
         type: AUTH_FAIL,
       });
+
+      return false;
     }
   };
 
