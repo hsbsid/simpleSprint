@@ -32,8 +32,10 @@ if (localStorage.token) {
 
 const App = () => {
   //load user action, only on component did mount
+  //set app DOM title
   useEffect(() => {
     store.dispatch(loadUser());
+    document.title = 'simpleSprint';
   }, {});
 
   return (
