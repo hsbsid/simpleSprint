@@ -1,6 +1,11 @@
 //components
 import React, { Fragment, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from 'react-router-dom';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Navbar from './components/layout/Navbar';
@@ -36,11 +41,14 @@ const App = () => {
       <Router>
         <Fragment>
           <Alert />
-          {/* <Switch> */}
-          <Route exact path='/login' component={Login} />
-          <Route exact path='/signup' component={Register} />
-          <PrivateRoute exact path='/dashboard' component={Dashboard} />
-          {/* </Switch> */}
+          <Switch>
+            <Route exact path='/'>
+              <Redirect to='/login' />
+            </Route>
+            <Route exact path='/login' component={Login} />
+            <Route exact path='/signup' component={Register} />
+            <PrivateRoute exact path='/dashboard' component={Dashboard} />
+          </Switch>
         </Fragment>
       </Router>
     </Provider>
