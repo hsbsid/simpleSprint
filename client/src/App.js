@@ -36,11 +36,14 @@ const App = () => {
       <Router>
         <Fragment>
           <Alert />
-          {/* <Switch> */}
-          <Route exact path='/login' component={Login} />
-          <Route exact path='/signup' component={Register} />
-          <PrivateRoute exact path='/dashboard' component={Dashboard} />
-          {/* </Switch> */}
+          <Switch>
+            <Route exact path='/'>
+              <Redirect to='/login' />
+            </Route>
+            <Route exact path='/login' component={Login} />
+            <Route exact path='/signup' component={Register} />
+            <PrivateRoute exact path='/dashboard' component={Dashboard} />
+          </Switch>
         </Fragment>
       </Router>
     </Provider>
