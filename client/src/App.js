@@ -11,6 +11,8 @@ import Register from './components/auth/Register';
 import Navbar from './components/layout/Navbar';
 import Alert from './components/layout/Alert';
 import Dashboard from './components/dashboard/Dashboard';
+import Loading from './components/layout/Loading';
+
 import PrivateRoute from './components/routing/PrivateRoute';
 
 //Redux
@@ -36,7 +38,7 @@ const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());
     document.title = 'simpleSprint';
-  }, {});
+  }, []);
 
   return (
     <Provider store={store}>
@@ -45,11 +47,16 @@ const App = () => {
           <Alert />
           <Switch>
             <Route exact path='/'>
-              <Redirect to='/login' />
+              <Redirect to='/signup' />
             </Route>
             <Route exact path='/login' component={Login} />
             <Route exact path='/signup' component={Register} />
-            <PrivateRoute exact path='/dashboard' component={Dashboard} />
+            <PrivateRoute
+              exact
+              path={['/dashboard', '/dashboard/:id']}
+              component={Dashboard}
+            />
+            <Route path='/load' component={Loading} />
           </Switch>
         </Fragment>
       </Router>

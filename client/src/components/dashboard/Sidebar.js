@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-const Sidebar = (props) => {
+const Sidebar = ({ boardList }) => {
   return (
     <Fragment>
       <div
@@ -12,20 +12,17 @@ const Sidebar = (props) => {
       >
         <ul className='nav nav-pills flex-column mb-auto'>
           <li style={{ fontSize: '12px', color: 'darkgrey' }}>MY BOARDS</li>
+          {boardList.map((board) => (
+            <li>
+              <Link to={board._id} className='nav-link'>
+                {board.title}
+              </Link>
+            </li>
+          ))}
           <li>
-            <a href='#' className='nav-link'>
-              Board A
-            </a>
-          </li>
-          <li>
-            <a href='#' className='nav-link'>
-              Board B
-            </a>
-          </li>
-          <li>
-            <a href='#' className='nav-link'>
-              Board C
-            </a>
+            <Link to='createBoard' className='nav-link'>
+              + New Board
+            </Link>
           </li>
         </ul>
         <hr />
