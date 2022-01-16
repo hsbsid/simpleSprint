@@ -1,16 +1,23 @@
-import { LOAD_ALL_BOARDS, BOARD_ERROR, LOAD_BOARD } from '../actions/types';
-import axios from 'axios';
+import {
+  LOAD_ALL_BOARDS,
+  BOARD_ERROR,
+  LOAD_BOARD,
+  BOARD_CREATED,
+  BOARD_DELETED,
+} from '../actions/types';
+
+import api from '../utils/api';
 import { setAlert } from './alert';
 
 export const getAllBoards = () => async (dispatch) => {
   try {
-    const res = await axios.get('/api/boards/');
+    const res = await api.get('/boards');
     dispatch({
       type: LOAD_ALL_BOARDS,
       payload: res.data,
     });
-  } catch (err) {
-    const errors = err.response.data.errors;
+  } catch (error) {
+    const errors = error.response.data.errors;
 
     errors.forEach((e) => {
       dispatch(setAlert(e.msg, 'danger'));
@@ -24,15 +31,15 @@ export const getAllBoards = () => async (dispatch) => {
 
 export const getBoard = (id) => async (dispatch) => {
   try {
-    const res = await axios.get(`/api/boards/${id}`);
+    const res = await api.get(`/boards/${id}`);
 
     dispatch({
       type: LOAD_BOARD,
       payload: res.data,
     });
-  } catch (err) {
-    const errors = err.response.data.errors;
-    console.log(err);
+  } catch (error) {
+    const errors = error.response.data.errors;
+
     errors.forEach((e) => {
       dispatch(setAlert(e.msg, 'danger'));
     });
@@ -43,32 +50,42 @@ export const getBoard = (id) => async (dispatch) => {
   }
 };
 
-export const createBoard =
-  ({ title, users, columns }) =>
-  async (dispatch) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+export const createBoard = (boardFormData) => async (dispatch) => {
+  try {
+    const res = await api.post('/boards', boardFormData);
 
-    const body = JSON.stringify({ title, users, columns });
+    dispatch({ type: BOARD_CREATED, payload: res.data });
 
-    try {
-      const res = await axios.post('/api/boards', body, config);
+    dispatch(setAlert('Board Created', 'success'));
 
-      dispatch(setAlert('Board Created', 'success'));
+    return res.data._id;
+  } catch (error) {
+    const errors = error.response.data.errors;
 
-      return res.data._id;
-    } catch (err) {
-      const errors = err.response.data.errors;
-      console.log(err);
-      errors.forEach((e) => {
-        dispatch(setAlert(e.msg, 'danger'));
-      });
+    errors.forEach((e) => {
+      dispatch(setAlert(e.msg, 'danger'));
+    });
 
-      dispatch({
-        type: BOARD_ERROR,
-      });
-    }
-  };
+    dispatch({
+      type: BOARD_ERROR,
+    });
+  }
+};
+
+export const deleteBoard = (id) => async (dispatch) => {
+  try {
+    const res = await api.delete(`/boards/${id}`);
+
+    dispatch({ type: BOARD_DELETED, payload: id });
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    errors.forEach((e) => {
+      dispatch(setAlert(e.msg, 'danger'));
+    });
+
+    dispatch({
+      type: BOARD_ERROR,
+    });
+  }
+};

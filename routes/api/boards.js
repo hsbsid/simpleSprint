@@ -32,6 +32,8 @@ router.get('/', auth, async (req, res) => {
 // @access Private
 router.get('/:id', auth, async (req, res) => {
   try {
+    //get user and id from request
+    const userId = req.user._id;
     const boardId = req.params.id;
 
     //check if the id is valid
@@ -41,11 +43,11 @@ router.get('/:id', auth, async (req, res) => {
         .json({ errors: [{ msg: 'Board does not exist' }] });
     }
 
-    //try to find the board
-    const board = await Board.findById(boardId);
+    //try to find the board,
+    const board = await Board.findOne({ _id: boardId, 'users.user': userId });
 
     //if no board found
-    if (!board) {
+    if (!board || board.length <= 0) {
       return res
         .status(404)
         .json({ errors: [{ msg: 'Board does not exist' }] });
@@ -104,15 +106,52 @@ router.post(
     try {
       newBoard = new Board(newBoard);
 
-      const post = await newBoard.save();
+      const board = await newBoard.save();
 
-      res.json(post);
+      res.json(board);
     } catch (error) {
       console.log(error);
       res.status(500).send('Server Error');
     }
   }
 );
+
+// @route  DELETE api/boards/:id
+// @desc   Delete a board
+// @access Private
+router.delete('/:id', [auth, validationCheck], async (req, res) => {
+  //get user and id from request
+  const userId = req.user._id;
+  const boardId = req.params.id;
+
+  //check if the id is valid
+  if (!ObjectId.isValid(boardId)) {
+    return res.status(404).json({ errors: [{ msg: 'Board does not exist' }] });
+  }
+
+  try {
+    //find the board as long as this user is the owner
+    const board = await Board.findOne({
+      _id: boardId,
+      user: { $elemMatch: { user: userId, permission: 'Owner' } },
+    });
+
+    //board does not exist under this user
+    if (!board) {
+      return res
+        .status(404)
+        .json({ errors: [{ msg: 'Board does not exist' }] });
+    }
+
+    //board does exist, remove it
+    board.remove();
+
+    res.json({ _id: boardId });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route  PUT api/boards/:id
 // @desc   edit a board (name, swimlanes, columns, users)

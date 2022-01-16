@@ -8,6 +8,8 @@ export const LOGOUT = 'LOGOUT';
 //Board Actions
 export const LOAD_ALL_BOARDS = 'LOAD_ALL_BOARDS';
 export const LOAD_BOARD = 'LOAD_BOARD';
+export const BOARD_CREATED = 'BOARD_CREATED';
+export const BOARD_DELETED = 'BOARD_DELETED';
 export const BOARD_ERROR = 'BOARD_ERROR';
 
 //Alert Actions

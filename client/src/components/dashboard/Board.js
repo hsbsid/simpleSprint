@@ -10,12 +10,20 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Column from './Column';
 
-const Board = ({ board }) => {
+const Board = ({ board, owner, onDeleteBoard }) => {
   return (
     <Fragment>
       <Container>
         <Row>
           <h3>{board.title}</h3>
+          {owner && (
+            <button
+              className='deleteBoard'
+              onClick={(e) => onDeleteBoard(e, board._id)}
+            >
+              Delete Board <i className='fas fa-trash'></i>
+            </button>
+          )}
         </Row>
         <Row lg={4} md={4} className='flex-nowrap' style={{ height: '95%' }}>
           {board.columns.map((c) => (

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import api from '../utils/api';
 import {
   AUTH_FAIL,
   AUTH_SUCCESS,
@@ -13,10 +13,10 @@ import setAuthToken from '../utils/setAuthToken';
 //function to get all users
 export const getAllUsers = () => async (dispatch) => {
   try {
-    const res = await axios.get('/api/users');
+    const res = await api.get('/users');
     return res.data;
-  } catch (err) {
-    const errors = err.response.data.errors;
+  } catch (error) {
+    const errors = error.response.data.errors;
 
     if (errors) {
       errors.forEach((e) => {
@@ -36,99 +36,76 @@ export const loadUser = () => async (dispatch) => {
 
   //try to get the user
   try {
-    const res = await axios.get('/api/auth');
+    const res = await api.get('/auth');
 
     //no errors so dispatch the user loaded. res.data is the user id, pass to redux state
     dispatch({
       type: USER_LOADED,
       payload: res.data,
     });
-  } catch (err) {
+  } catch (error) {
     dispatch({
       type: AUTH_FAIL,
     });
   }
 };
 
-export const register =
-  ({ name, email, password }) =>
-  async (dispatch) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+export const register = (registerFormData) => async (dispatch) => {
+  //register the user
+  try {
+    const res = await api.post('/users', registerFormData);
 
-    const body = JSON.stringify({ name, email, password });
+    dispatch({
+      type: AUTH_SUCCESS,
+      payload: res.data,
+    });
 
-    //register the user
-    try {
-      const res = await axios.post('/api/users', body, config);
+    //load the user into state based on token
+    dispatch(loadUser());
 
-      dispatch({
-        type: AUTH_SUCCESS,
-        payload: res.data,
-      });
+    return true;
+  } catch (error) {
+    const errors = error.response.data.errors;
 
-      //load the user into state based on token
-      dispatch(loadUser());
-
-      return true;
-    } catch (err) {
-      const errors = err.response.data.errors;
-
-      if (errors) {
-        errors.forEach((e) => {
-          dispatch(setAlert(e.msg, 'danger'));
-        });
-      }
-
-      dispatch({
-        type: AUTH_FAIL,
-      });
-
-      return false;
-    }
-  };
-
-export const login =
-  ({ email, password }) =>
-  async (dispatch) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    const body = {
-      email,
-      password,
-    };
-
-    //try to log in using credentials
-    try {
-      const res = await axios.post('/api/auth', body, config);
-
-      //dispatch success with auth token as payload
-      dispatch({
-        type: AUTH_SUCCESS,
-        payload: res.data,
-      });
-
-      //load the user into state based on token
-      dispatch(loadUser());
-    } catch (err) {
-      const errors = err.response.data.errors;
-
+    if (errors) {
       errors.forEach((e) => {
         dispatch(setAlert(e.msg, 'danger'));
       });
-
-      dispatch({
-        type: AUTH_ERROR,
-      });
     }
-  };
+
+    dispatch({
+      type: AUTH_FAIL,
+    });
+
+    return false;
+  }
+};
+
+export const login = (loginFormData) => async (dispatch) => {
+  //try to log in using credentials
+  try {
+    const res = await api.post('/auth', loginFormData);
+
+    //dispatch success with auth token as payload
+    dispatch({
+      type: AUTH_SUCCESS,
+      payload: res.data,
+    });
+
+    //load the user into state based on token
+    dispatch(loadUser());
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    errors.forEach((e) => {
+      dispatch(setAlert(e.msg, 'danger'));
+    });
+
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
+};
 
 export const logout = () => (dispatch) => {
   dispatch({

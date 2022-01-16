@@ -1,10 +1,10 @@
-import axios from 'axios';
+import api from './api';
 
 //globally set auth token as a axios header
 export default (token) => {
   if (token) {
-    axios.defaults.headers.common['x-auth-token'] = token;
+    api.defaults.headers.common['x-auth-token'] = token;
   } else {
-    delete axios.defaults.headers.common('x-auth-token');
+    delete api.defaults.headers.common('x-auth-token');
   }
 };
