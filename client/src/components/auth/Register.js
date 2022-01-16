@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 //components
 import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Stack from 'react-bootstrap/Stack';
@@ -57,32 +58,40 @@ const Register = ({ setAlert, register, auth }) => {
 
             <form onSubmit={(e) => onSubmit(e)}>
               <Stack gap={1}>
-                <Form.Control
-                  name='name'
-                  placeholder='Name'
-                  value={name}
-                  onChange={onChange}
-                />
-                <Form.Control
-                  name='email'
-                  placeholder='Email'
-                  value={email}
-                  onChange={onChange}
-                />
-                <Form.Control
-                  name='password1'
-                  placeholder='Password'
-                  type='password'
-                  value={password1}
-                  onChange={onChange}
-                />
-                <Form.Control
-                  name='password2'
-                  placeholder='Confirm Password'
-                  type='password'
-                  value={password2}
-                  onChange={onChange}
-                />
+                <FloatingLabel label='Your Name'>
+                  <Form.Control
+                    name='name'
+                    placeholder='Name'
+                    value={name}
+                    onChange={onChange}
+                  />
+                </FloatingLabel>
+                <FloatingLabel label='Email Address'>
+                  <Form.Control
+                    name='email'
+                    placeholder='Email'
+                    value={email}
+                    onChange={onChange}
+                  />{' '}
+                </FloatingLabel>
+                <FloatingLabel label='Password'>
+                  <Form.Control
+                    name='password1'
+                    placeholder='Password'
+                    type='password'
+                    value={password1}
+                    onChange={onChange}
+                  />
+                </FloatingLabel>
+                <FloatingLabel label='Confirm Password'>
+                  <Form.Control
+                    name='password2'
+                    placeholder='Confirm Password'
+                    type='password'
+                    value={password2}
+                    onChange={onChange}
+                  />
+                </FloatingLabel>
               </Stack>
               <Button type='submit'>Sign Up</Button>
             </form>

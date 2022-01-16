@@ -8,10 +8,14 @@ import { getAllBoards, getBoard } from '../../actions/boards';
 
 //components
 import Sidebar from './Sidebar';
+import CreateBoard from './CreateBoard';
+import Board from './Board';
 import Navbar from '../layout/Navbar';
 import Loading from '../layout/Loading';
 
 import Container from 'react-bootstrap/esm/Container';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Column from './Column';
@@ -23,14 +27,17 @@ const Dashboard = ({ boards, getAllBoards, getBoard }) => {
   //on load, get board list as well as current board
   useEffect(() => {
     getAllBoards();
-    if (id) {
+    if (id && id !== 'createBoard') {
       getBoard(id);
     }
   }, [id]);
 
-  const columns = ['Backlog', 'In Progress', 'Done'];
-
   if (!boards.loading && !id) {
+    //if the user has no boards
+    if (boards.boards.length == 0) {
+      return <Redirect to={`/dashboard/createBoard`} />;
+    }
+
     //get the id for the first board in the list
     const firstId = boards.boards[0]._id;
 
@@ -48,23 +55,10 @@ const Dashboard = ({ boards, getAllBoards, getBoard }) => {
             <Sidebar loading boardList={boards.boards} />
           </Col>
           <Col id='BoardDisplay' lg={10} md={10}>
-            {!boards.board.loading ? (
-              <Container>
-                <Row>
-                  <h2>{boards.board.title}</h2>
-                </Row>
-                <Row
-                  lg={4}
-                  md={4}
-                  className='flex-nowrap'
-                  style={{ height: '95%' }}
-                >
-                  {boards.board.columns.map((c) => (
-                    <Column title={c} />
-                  ))}
-                  <Column title='Add a new Column' />
-                </Row>
-              </Container>
+            {id === 'createBoard' ? (
+              <CreateBoard />
+            ) : !boards.board.loading ? (
+              <Board board={boards.board} />
             ) : (
               <Loading />
             )}

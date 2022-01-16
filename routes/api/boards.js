@@ -6,6 +6,7 @@ const config = require('config');
 const jwt = require('jsonwebtoken');
 const auth = require('../../middleware/auth');
 
+const ObjectId = require('mongoose').Types.ObjectId;
 const User = require('../../models/User');
 const Board = require('../../models/Board');
 const Card = require('../../models/Card');
@@ -32,6 +33,13 @@ router.get('/', auth, async (req, res) => {
 router.get('/:id', auth, async (req, res) => {
   try {
     const boardId = req.params.id;
+
+    //check if the id is valid
+    if (!ObjectId.isValid(boardId)) {
+      return res
+        .status(404)
+        .json({ errors: [{ msg: 'Board does not exist' }] });
+    }
 
     //try to find the board
     const board = await Board.findById(boardId);
@@ -67,17 +75,30 @@ router.post(
   [
     auth,
     check('title', 'Board must have a title').trim().not().isEmpty(),
+    check('columns').custom((columns) => {
+      if (!Array.isArray(columns) || columns.length < 1) {
+        throw new Error('Invalid columns');
+      }
+      return true;
+    }),
+    check('columns.*', 'Columns must have titles').trim().not().isEmpty(),
+    check('users').custom((users) => {
+      if (!Array.isArray(users)) {
+        throw new Error('Invalid board user permissions');
+      }
+      return true;
+    }),
     validationCheck,
   ],
   async (req, res) => {
     //get user
     const user = req.user;
-    const users = [{ user: user.id, permission: 'Owner' }]; // add this user as creator of the board
 
     //create new board with standard columns, and a dummy swimlane
-    const { title } = req.body;
-    const columns = ['Backlog', 'In Progress', 'Completed'];
-    const swimlanes = [{ title: 'My Project', users: [{ user: user.id }] }];
+    let { title, users, columns } = req.body;
+    const swimlanes = [{ title: 'Main', users: [{ user: user.id }] }];
+    users = [...users, { user: user.id, permission: 'Owner' }]; // add this user as creator of the board
+
     let newBoard = { users, title, columns, swimlanes };
 
     try {

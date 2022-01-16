@@ -9,7 +9,9 @@ function Alert({ alerts }) {
   return (
     <Fragment>
       {alerts.map((a) => (
-        <BSAlert variant={a.alertType}>{a.msg}</BSAlert>
+        <BSAlert className='appAlert' variant={a.alertType}>
+          {a.msg}
+        </BSAlert>
       ))}
     </Fragment>
   );

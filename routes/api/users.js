@@ -5,8 +5,26 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const validationCheck = require('../../middleware/validationCheck');
-
+const auth = require('../../middleware/auth');
 const User = require('../../models/User');
+const mongoose = require('mongoose');
+
+// @route  POST api/users
+// @desc   Add new user to DB & get token
+// @access Public
+router.get('/', auth, async (req, res) => {
+  try {
+    //get all but current user
+    let users = await User.find({
+      _id: { $nin: req.user.id },
+    }).select('-password');
+
+    res.json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route  POST api/users
 // @desc   Add new user to DB & get token

@@ -56,7 +56,6 @@ const App = () => {
               path={['/dashboard', '/dashboard/:id']}
               component={Dashboard}
             />
-            <Route path='/load' component={Loading} />
           </Switch>
         </Fragment>
       </Router>

@@ -10,6 +10,24 @@ import {
 import { setAlert } from './alert';
 import setAuthToken from '../utils/setAuthToken';
 
+//function to get all users
+export const getAllUsers = () => async (dispatch) => {
+  try {
+    const res = await axios.get('/api/users');
+    return res.data;
+  } catch (err) {
+    const errors = err.response.data.errors;
+
+    if (errors) {
+      errors.forEach((e) => {
+        dispatch(setAlert(e.msg, 'danger'));
+      });
+    }
+
+    return [];
+  }
+};
+
 export const loadUser = () => async (dispatch) => {
   //if there is a token in local storage, add axios header globally
   if (localStorage.token) {

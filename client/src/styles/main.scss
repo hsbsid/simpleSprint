@@ -20,6 +20,42 @@ body {
   }
 }
 
+.appAlert {
+  position: absolute !important;
+  width: 30%;
+  bottom: 10px;
+  right: 10px;
+  z-index: 20;
+}
+
+.searchbar {
+  .searchSuggestions {
+    position: absolute;
+    background-color: #fff;
+    box-shadow: $lightgrey 2px;
+    z-index: 5;
+
+    ul {
+      list-style: none;
+      padding: 10px 0;
+      border: $lightgrey 2px solid;
+
+      &.empty {
+        display: none !important;
+      }
+
+      li {
+        padding: 12px;
+        width: 100%;
+        &:hover {
+          cursor: pointer;
+          background-color: $lightgrey;
+        }
+      }
+    }
+  }
+}
+
 @import './navbar.scss';
 @import './auth.scss';
 @import './dashboard.scss';

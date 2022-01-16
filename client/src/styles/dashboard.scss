@@ -24,7 +24,9 @@
 #BoardDisplay {
   display: flex;
   padding: 2em !important;
-  overflow-x: scroll;
+  height: 100%;
+  padding-right: 15px;
+  overflow: scroll;
 
   div.boardColumn {
     padding: 2px;
@@ -43,6 +45,88 @@
       background: $lightgrey;
       cursor: pointer;
       border: 3px dotted $lightgrey;
+    }
+  }
+}
+
+#CreateBoard {
+  width: 45%;
+
+  h2,
+  h3,
+  h4 {
+    margin-bottom: 35px;
+  }
+
+  input {
+    background-color: $lightgrey;
+
+    &:active,
+    &:focus {
+      background-color: #fff;
+    }
+  }
+
+  .searchbar {
+    max-width: 200px;
+    font-size: 14px;
+
+    .searchSuggestions {
+      min-width: 200px;
+    }
+  }
+
+  .list-group {
+    margin-top: 15px;
+
+    .list-group-item {
+      min-height: 56px;
+    }
+
+    div.list-group-item {
+      &:first-child {
+        font-size: 12px;
+        font-weight: 600;
+        p {
+          font-weight: 300;
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    button.list-group-item {
+      span {
+        pointer-events: none;
+        font-size: 10px;
+        font-style: italic;
+        display: none;
+        color: #842029;
+      }
+
+      &:hover {
+        background-color: #f8d7da;
+        span {
+          display: block;
+        }
+      }
+
+      &.addButton {
+        &:hover,
+        &:focus {
+          background-color: $skyblue;
+        }
+      }
+    }
+  }
+
+  .addColumn {
+    button {
+      background: $blue;
+      color: #fff;
+      &:hover,
+      &:focus {
+        background-color: $skyblue;
+      }
     }
   }
 }

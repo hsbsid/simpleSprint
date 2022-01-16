@@ -42,3 +42,33 @@ export const getBoard = (id) => async (dispatch) => {
     });
   }
 };
+
+export const createBoard =
+  ({ title, users, columns }) =>
+  async (dispatch) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const body = JSON.stringify({ title, users, columns });
+
+    try {
+      const res = await axios.post('/api/boards', body, config);
+
+      dispatch(setAlert('Board Created', 'success'));
+
+      return res.data._id;
+    } catch (err) {
+      const errors = err.response.data.errors;
+      console.log(err);
+      errors.forEach((e) => {
+        dispatch(setAlert(e.msg, 'danger'));
+      });
+
+      dispatch({
+        type: BOARD_ERROR,
+      });
+    }
+  };

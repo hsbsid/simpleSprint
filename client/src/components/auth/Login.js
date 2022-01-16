@@ -9,6 +9,7 @@ import { login } from '../../actions/auth';
 //components
 import AuthNav from './AuthNav';
 import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Stack from 'react-bootstrap/Stack';
@@ -49,19 +50,23 @@ const Login = ({ auth, login }) => {
 
             <form onSubmit={(e) => onSubmit(e)}>
               <Stack gap={1}>
-                <Form.Control
-                  placeholder='Email'
-                  onChange={(e) => onChange(e)}
-                  name='email'
-                  value={email}
-                />
-                <Form.Control
-                  placeholder='Password'
-                  type='password'
-                  onChange={(e) => onChange(e)}
-                  name='password'
-                  value={password}
-                />
+                <FloatingLabel label='Email'>
+                  <Form.Control
+                    placeholder='Email'
+                    onChange={(e) => onChange(e)}
+                    name='email'
+                    value={email}
+                  />
+                </FloatingLabel>
+                <FloatingLabel label='Password'>
+                  <Form.Control
+                    placeholder='Password'
+                    type='password'
+                    onChange={(e) => onChange(e)}
+                    name='password'
+                    value={password}
+                  />
+                </FloatingLabel>
               </Stack>
               <Button type='submit'>Login</Button>
             </form>
