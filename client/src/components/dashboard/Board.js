@@ -10,18 +10,25 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Column from './Column';
 
-const Board = ({ board, owner, onDeleteBoard }) => {
+const Board = ({ board, owner, onDeleteBoard, onRemoveFromBoard }) => {
   return (
     <Fragment>
       <Container>
         <Row>
           <h3>{board.title}</h3>
-          {owner && (
+          {owner ? (
             <button
               className='deleteBoard'
               onClick={(e) => onDeleteBoard(e, board._id)}
             >
               Delete Board <i className='fas fa-trash'></i>
+            </button>
+          ) : (
+            <button
+              className='deleteBoard'
+              onClick={(e) => onRemoveFromBoard(e, board._id)}
+            >
+              Leave this board <i className='fas fa-times'></i>
             </button>
           )}
         </Row>

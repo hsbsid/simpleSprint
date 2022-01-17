@@ -15,16 +15,16 @@ router.get('/', auth, async (req, res) => {
 });
 
 // @route  POST api/auth
-// @desc   check credentials and get token
+// @desc   Login endpoint: check credentials and get token
 // @access Public
 router.post(
   '/',
   [
-    check('email', 'email required')
+    check('email', 'Valid email required')
       .trim()
       .isEmail()
       .normalizeEmail({ all_lowercase: true }),
-    check('password', 'password required').trim().notEmpty(),
+    check('password', 'Valid password required').trim().notEmpty(),
     validationCheck,
   ],
   async (req, res) => {
@@ -38,7 +38,7 @@ router.post(
       if (!user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: 'invalid credentials' }] });
+          .json({ errors: [{ msg: 'Invalid credentials' }] });
       }
 
       //user does exist
@@ -49,7 +49,7 @@ router.post(
       if (!passwordMatch) {
         return res
           .status(400)
-          .json({ errors: [{ msg: 'invalid credentials' }] });
+          .json({ errors: [{ msg: 'Invalid credentials' }] });
       }
 
       //correct credentials, creat jwt token using email and jwtSecret

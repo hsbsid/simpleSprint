@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 //actions
 import { login } from '../../actions/auth';
+import { setAlert } from '../../actions/alert';
 
 //components
 import AuthNav from './AuthNav';
@@ -13,11 +14,10 @@ import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Stack from 'react-bootstrap/Stack';
-import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Nav from 'react-bootstrap/Nav';
 
-const Login = ({ auth, login }) => {
+const Login = ({ auth, login, setAlert }) => {
+  //create state to monitor form field values
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -25,13 +25,32 @@ const Login = ({ auth, login }) => {
 
   const { email, password } = formData;
 
+  //create state to monitor validation
+  const [validation, setValidation] = useState({
+    valid: true,
+    emailValid: true,
+    passwordValid: true,
+    validationMessage: '',
+  });
+
+  const { valid, emailValid, passwordValid, validationMessage } = validation;
+
   const onChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value.trim() });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    login({ email, password });
+
+    if (!email || email === '') {
+      return setAlert('Please enter an email', 'danger');
+    }
+
+    if (!password || password === '') {
+      return setAlert('Please enter a password', 'danger');
+    }
+
+    await login({ email, password });
   };
 
   //if the user is logged in, redirect them
@@ -56,6 +75,7 @@ const Login = ({ auth, login }) => {
                     onChange={(e) => onChange(e)}
                     name='email'
                     value={email}
+                    isInvalid={!emailValid}
                   />
                 </FloatingLabel>
                 <FloatingLabel label='Password'>
@@ -65,6 +85,7 @@ const Login = ({ auth, login }) => {
                     onChange={(e) => onChange(e)}
                     name='password'
                     value={password}
+                    isInvalid={!passwordValid}
                   />
                 </FloatingLabel>
               </Stack>
@@ -93,10 +114,11 @@ const Login = ({ auth, login }) => {
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
+  setAlert: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => {
   return { auth: state.auth };
 };
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { login, setAlert })(Login);

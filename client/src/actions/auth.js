@@ -23,8 +23,6 @@ export const getAllUsers = () => async (dispatch) => {
         dispatch(setAlert(e.msg, 'danger'));
       });
     }
-
-    return [];
   }
 };
 
@@ -67,15 +65,15 @@ export const register = (registerFormData) => async (dispatch) => {
   } catch (error) {
     const errors = error.response.data.errors;
 
+    dispatch({
+      type: AUTH_FAIL,
+    });
+
     if (errors) {
       errors.forEach((e) => {
         dispatch(setAlert(e.msg, 'danger'));
       });
     }
-
-    dispatch({
-      type: AUTH_FAIL,
-    });
 
     return false;
   }
@@ -97,12 +95,12 @@ export const login = (loginFormData) => async (dispatch) => {
   } catch (error) {
     const errors = error.response.data.errors;
 
-    errors.forEach((e) => {
-      dispatch(setAlert(e.msg, 'danger'));
-    });
-
     dispatch({
       type: AUTH_ERROR,
+    });
+
+    errors.forEach((e) => {
+      dispatch(setAlert(e.msg, 'danger'));
     });
   }
 };

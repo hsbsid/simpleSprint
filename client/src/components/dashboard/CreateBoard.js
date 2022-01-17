@@ -19,7 +19,7 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 
 const CreateBoard = (props) => {
-  const { getAllUsers, createBoard } = props;
+  const { getAllUsers, createBoard, setAlert } = props;
 
   //create a state for the form data
   // title: title of board
@@ -114,6 +114,17 @@ const CreateBoard = (props) => {
   //on submission of the completed form
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    //form validation
+
+    //check for empty fields:
+    if (!title || title === '') {
+      return setAlert('Please enter a title', 'danger');
+    }
+
+    if (columns.length <= 0) {
+      return setAlert('Must include atleast one column', 'danger', 6000);
+    }
 
     //add permission to all the users
     const users = collaborators.map((c) => ({
@@ -221,6 +232,9 @@ const CreateBoard = (props) => {
 CreateBoard.propTypes = {
   getAllUsers: PropTypes.func.isRequired,
   createBoard: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
 };
 
-export default connect(null, { getAllUsers, createBoard })(CreateBoard);
+export default connect(null, { getAllUsers, createBoard, setAlert })(
+  CreateBoard
+);

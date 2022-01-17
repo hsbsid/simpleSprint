@@ -58,6 +58,12 @@ const Dashboard = ({ user, boards, getAllBoards, getBoard, deleteBoard }) => {
     await deleteBoard(id);
   };
 
+  const onRemoveFromBoard = async (e, id) => {
+    e.preventDefault();
+
+    console.log(`Removing ${user._id} from Board ${id}`);
+  };
+
   return !boards.loading ? (
     <Fragment>
       <Container id='Dashboard' fluid>
@@ -82,6 +88,7 @@ const Dashboard = ({ user, boards, getAllBoards, getBoard, deleteBoard }) => {
                   ).length > 0
                 }
                 onDeleteBoard={onDeleteBoard}
+                onRemoveFromBoard={onRemoveFromBoard}
               />
             ) : (
               <Loading />

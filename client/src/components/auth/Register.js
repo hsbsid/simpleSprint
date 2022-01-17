@@ -33,12 +33,31 @@ const Register = ({ setAlert, register, auth }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    if (password1 != password2) {
-      setAlert('Passwords do not match', 'error');
-    } else {
-      //register action, if register is successful, show an alert
-      register({ name, email, password: password1 });
+    //client side validation
+
+    //check for empty fields:
+    if (!name || name === '') {
+      return setAlert('Please enter your name', 'danger');
     }
+
+    if (!email || email === '') {
+      return setAlert('Please enter a valid email', 'danger');
+    }
+
+    if (!password1 || password1 === '') {
+      return setAlert('Please enter a password', 'danger');
+    }
+    if (!password2 || name === '') {
+      return setAlert('Please confirm your password', 'danger');
+    }
+
+    //check if passwords match
+    if (password1 != password2) {
+      return setAlert('Passwords do not match', 'danger');
+    }
+
+    //register action, if register is successful, show an alert
+    register({ name, email, password: password1 });
   };
 
   //if the user is logged in, redirect them
