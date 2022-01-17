@@ -1,4 +1,0 @@
-{
-  "mongoURI": "mongodb+srv://siddy:siddy@cluster0.wfglq.mongodb.net/simpleSprint?retryWrites=true&w=majority",
-  "jwtSecret": "This is my secret"
-}
