@@ -4,6 +4,7 @@ import {
   LOAD_BOARD,
   BOARD_CREATED,
   BOARD_DELETED,
+  CARD_CREATED,
 } from '../actions/types';
 
 const initialState = {
@@ -27,6 +28,11 @@ export default function (state = initialState, action) {
         ...state,
         boards: [...state.boards.filter((b) => b._id !== payload)],
         board: { loading: false },
+      };
+    case CARD_CREATED:
+      return {
+        ...state,
+        board: { ...state.board, cards: [...state.board.cards, payload] },
       };
     case BOARD_ERROR:
       return {

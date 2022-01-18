@@ -1,10 +1,15 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 //actions
-import { getAllBoards, getBoard, deleteBoard } from '../../actions/boards';
+import {
+  getAllBoards,
+  getBoard,
+  deleteBoard,
+  addCard,
+} from '../../actions/boards';
 
 //components
 import Sidebar from './Sidebar';
@@ -20,7 +25,14 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Column from './Column';
 
-const Dashboard = ({ user, boards, getAllBoards, getBoard, deleteBoard }) => {
+const Dashboard = ({
+  user,
+  boards,
+  getAllBoards,
+  getBoard,
+  deleteBoard,
+  addCard,
+}) => {
   //get board id from the dynamic url
   const { id } = useParams();
 
@@ -35,6 +47,9 @@ const Dashboard = ({ user, boards, getAllBoards, getBoard, deleteBoard }) => {
 
     loadBoards();
   }, [id]);
+
+  //state for modals
+  const [deleteModal, setDeleteModal] = useState(false);
 
   //if boards are not being loaded, and no id is provided (in url) OR the board loaded is null (id is invalid)
   if (
@@ -52,16 +67,31 @@ const Dashboard = ({ user, boards, getAllBoards, getBoard, deleteBoard }) => {
     return <Redirect to={`/dashboard/${firstId}`} />;
   }
 
+  //delete/remove functions
   const onDeleteBoard = async (e, id) => {
     e.preventDefault();
 
     await deleteBoard(id);
   };
 
-  const onRemoveFromBoard = async (e, id) => {
+  const onLeaveBoard = async (e, id) => {
     e.preventDefault();
 
     console.log(`Removing ${user._id} from Board ${id}`);
+  };
+
+  //column add/remove
+  const onAddColumn = async (boardId, columnName) => {
+    console.log(`Add column ${columnName} to board ${boardId}`);
+  };
+
+  const onDeleteColumn = async (boardId, columnName) => {
+    console.log(`Remove column ${columnName} from board ${boardId}`);
+  };
+
+  //cards
+  const onAddCard = async (cardData, boardId) => {
+    await addCard(cardData, boardId);
   };
 
   return !boards.loading ? (
@@ -87,8 +117,11 @@ const Dashboard = ({ user, boards, getAllBoards, getBoard, deleteBoard }) => {
                       u.permission.localeCompare('Owner') === 0
                   ).length > 0
                 }
-                onDeleteBoard={onDeleteBoard}
-                onRemoveFromBoard={onRemoveFromBoard}
+                onDeleteBoard={(e) => setDeleteModal(true)}
+                onLeaveBoard={onLeaveBoard}
+                onAddColumn={onAddColumn}
+                onDeleteColumn={onDeleteColumn}
+                onAddCard={onAddCard}
               />
             ) : (
               <Loading />
@@ -108,6 +141,7 @@ Dashboard.propTypes = {
   getAllBoards: PropTypes.func.isRequired,
   getBoard: PropTypes.func.isRequired,
   deleteBoard: PropTypes.func.isRequired,
+  addCard: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -119,4 +153,5 @@ export default connect(mapStateToProps, {
   getAllBoards,
   getBoard,
   deleteBoard,
+  addCard,
 })(Dashboard);

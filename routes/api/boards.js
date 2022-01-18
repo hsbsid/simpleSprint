@@ -233,7 +233,7 @@ router.post(
   [
     auth,
     check('title', 'Card must have a title').trim().not().isEmpty(),
-    check('swimlane', 'Card must have a swimlane').trim().not().isEmpty(),
+    // check('swimlane', 'Card must have a swimlane').trim().not().isEmpty(),
     check('column', 'Card must have a column').trim().not().isEmpty(),
     validationCheck,
   ],
@@ -244,7 +244,7 @@ router.post(
     //create new card with values
     const boardId = req.params.boardId;
     const { title, swimlane, column } = req.body;
-    let newCard = { board: boardId, title, column, swimlane };
+    let newCard = { board: boardId, title, column };
 
     try {
       //check if board exists
@@ -256,19 +256,17 @@ router.post(
           .status(404)
           .json({ errors: [{ msg: 'Board does not exist' }] });
       }
-
-      //check if swimlane exists
-      if (board.swimlanes.filter((s) => s.id == swimlane).length < 1) {
-        return res
-          .status(404)
-          .json({ errors: [{ msg: 'Board does not exist' }] });
-      }
-
+      // //check if swimlane exists
+      // if (board.swimlanes.filter((s) => s.id == swimlane).length < 1) {
+      //   return res
+      //     .status(404)
+      //     .json({ errors: [{ msg: 'Swimlane does not exist' }] });
+      // }
       //check if column exists
       if (!board.columns.includes(column)) {
         return res
           .status(404)
-          .json({ errors: [{ msg: 'Board does not exist' }] });
+          .json({ errors: [{ msg: 'Column does not exist' }] });
       }
 
       //if user is not authorized

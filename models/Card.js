@@ -19,7 +19,6 @@ const CardSchema = new mongoose.Schema({
   swimlane: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'board.swimlanes',
-    required: true,
   },
   column: {
     type: String,

@@ -28,23 +28,78 @@
   padding-right: 15px;
   overflow: scroll;
 
+  #boardHeader {
+    h3 {
+      padding: 0;
+      margin-bottom: 10px;
+    }
+    padding-bottom: 120px;
+  }
+
   div.boardColumn {
     padding: 2px;
-    div {
-      background: $lightgrey;
+
+    h6 {
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+
+    div.container {
+      padding: 25px 5px;
+      background-color: $lightgrey;
       border-radius: 5px;
       min-height: 100px;
+
+      div.boardCard {
+        padding: 20px 0 20px 15px;
+        margin-bottom: 5px;
+        border-radius: 4px;
+        background-color: #fff;
+        color: $deepdarkblue !important;
+
+        &:last-of-type {
+          margin-bottom: 30px;
+        }
+
+        h6 {
+          font-size: 14px;
+          text-transform: none;
+          color: $deepdarkblue !important;
+        }
+      }
+
+      a {
+        margin-top: 35px;
+        margin-left: 5px;
+        font-size: 12px;
+        text-transform: uppercase;
+        &:hover {
+          color: $blue;
+        }
+      }
     }
   }
 
-  div.boardColumn:last-of-type div {
-    background: none;
-    border: 3px dotted grey;
+  .addColumn {
+    width: 100%;
+    border-radius: 5px;
+    min-height: 100px;
+    color: $deepdarkblue;
+    background-color: $lightgrey;
+    border: none;
 
     &:hover {
-      background: $lightgrey;
-      cursor: pointer;
-      border: 3px dotted $lightgrey;
+      background-color: $blue;
+      color: #fff;
+    }
+  }
+
+  button {
+    background-color: $blue;
+
+    &:hover {
+      background-color: $skyblue;
+      color: $blue;
     }
   }
 }

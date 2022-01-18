@@ -48,11 +48,13 @@ const CreateBoard = (props) => {
   }, []);
 
   const titleOnChange = (e) => {
-    setFormData({ ...formData, title: e.target.value });
+    setFormData({ ...formData, title: e.target.value.trim() });
   };
 
   //when a collaborator is added from the search bar
   const collaboratorsOnSelect = (resultUser) => {
+    resultUser = resultUser.trim();
+
     //boolean which is true when the selected user is not already in the collaborator list
     const isNewId =
       collaborators.filter((user) => user.id.localeCompare(resultUser.id) === 0)
@@ -63,6 +65,8 @@ const CreateBoard = (props) => {
         ...formData,
         collaborators: [...collaborators, resultUser],
       });
+    } else {
+      setAlert('That person is already added to this board', 'danger');
     }
   };
 
@@ -76,20 +80,31 @@ const CreateBoard = (props) => {
     });
   };
 
+  //track the new column input changes
+  const addColumnOnChange = (e) => {
+    setFormData({
+      ...formData,
+      newColumn: e.target.value,
+    });
+  };
+
   //add selected column to the list
   const addColumn = (e) => {
     e.preventDefault();
 
     //ensure the column name is not already in the list, same method as collaboratorsOnSelect()
     const isNewCol =
-      columns.filter((c) => c.localeCompare(newColumn) === 0).length === 0;
+      columns.filter((c) => c.localeCompare(newColumn.trim()) === 0).length ===
+      0;
 
     if (isNewCol) {
       setFormData({
         ...formData,
-        columns: [...columns, newColumn],
+        columns: [...columns, newColumn.trim()],
         newColumn: '',
       });
+    } else {
+      setAlert('That column is already added to this board', 'danger');
     }
   };
 
@@ -100,14 +115,6 @@ const CreateBoard = (props) => {
     setFormData({
       ...formData,
       columns: columns.filter((c) => c != e.target.value),
-    });
-  };
-
-  //track the new column input changes
-  const addColumnOnChange = (e) => {
-    setFormData({
-      ...formData,
-      newColumn: e.target.value,
     });
   };
 
@@ -207,7 +214,7 @@ const CreateBoard = (props) => {
                 </span>
               </ListGroup.Item>
             ))}
-            <InputGroup className='mb-3 addColumn'>
+            <InputGroup className='mb-3'>
               <FloatingLabel label='Add a column'>
                 <Form.Control
                   placeholder='Add Column'
