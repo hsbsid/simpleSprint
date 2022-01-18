@@ -55,6 +55,10 @@ const CreateBoard = (props) => {
   const collaboratorsOnSelect = (resultUser) => {
     resultUser = resultUser.trim();
 
+    if (!resultUser || resultUser == '') {
+      return setAlert('Invalid User', 'danger');
+    }
+
     //boolean which is true when the selected user is not already in the collaborator list
     const isNewId =
       collaborators.filter((user) => user.id.localeCompare(resultUser.id) === 0)
@@ -91,6 +95,10 @@ const CreateBoard = (props) => {
   //add selected column to the list
   const addColumn = (e) => {
     e.preventDefault();
+
+    if (!newColumn || newColumn.trim() == '') {
+      return setAlert('Invalid Column Name', 'danger');
+    }
 
     //ensure the column name is not already in the list, same method as collaboratorsOnSelect()
     const isNewCol =
@@ -222,7 +230,11 @@ const CreateBoard = (props) => {
                   onChange={(e) => addColumnOnChange(e)}
                 />
               </FloatingLabel>
-              <Button variant='outline-secondary' onClick={(e) => addColumn(e)}>
+              <Button
+                className='addButton'
+                variant='outline-secondary'
+                onClick={(e) => addColumn(e)}
+              >
                 <i class='fas fa-plus'></i>
               </Button>
             </InputGroup>
