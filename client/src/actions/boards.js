@@ -5,6 +5,8 @@ import {
   BOARD_CREATED,
   BOARD_DELETED,
   CARD_CREATED,
+  EDIT_CARD,
+  CARD_DELETED,
 } from '../actions/types';
 
 import api from '../utils/api';
@@ -99,6 +101,43 @@ export const addCard = (cardData, boardId) => async (dispatch) => {
 
     dispatch({ type: CARD_CREATED, payload: res.data });
     dispatch(setAlert('Card Added', 'success'));
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    dispatch({
+      type: BOARD_ERROR,
+    });
+
+    errors.forEach((e) => {
+      dispatch(setAlert(e.msg, 'danger'));
+    });
+  }
+};
+
+export const deleteCard = (cardId) => async (dispatch) => {
+  try {
+    const res = await api.delete(`/boards/cards/${cardId}`);
+
+    dispatch({ type: CARD_DELETED, payload: res.data });
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    dispatch({
+      type: BOARD_ERROR,
+    });
+
+    errors.forEach((e) => {
+      dispatch(setAlert(e.msg, 'danger'));
+    });
+  }
+};
+
+export const editCard = (cardId, cardData) => async (dispatch) => {
+  try {
+    //make put request to change card data
+    const res = await api.put(`/boards/cards/${cardId}`, cardData);
+
+    dispatch({ type: EDIT_CARD, payload: res.data });
   } catch (error) {
     const errors = error.response.data.errors;
 

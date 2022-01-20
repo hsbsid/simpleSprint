@@ -9,9 +9,9 @@ const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const mongoose = require('mongoose');
 
-// @route  POST api/users
-// @desc   Add new user to DB & get token
-// @access Public
+// @route  GET api/users
+// @desc   get all users
+// @access Private
 router.get('/', auth, async (req, res) => {
   try {
     //get all but current user

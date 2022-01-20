@@ -11,15 +11,17 @@ const Sidebar = ({ boardList }) => {
         id='Sidebar'
       >
         <ul className='nav nav-pills flex-column mb-auto'>
-          <li style={{ fontSize: '12px', color: 'darkgrey' }}>MY BOARDS</li>
+          <li key='title' style={{ fontSize: '12px', color: 'darkgrey' }}>
+            MY BOARDS
+          </li>
           {boardList.map((board) => (
-            <li>
+            <li key={board._id}>
               <Link to={board._id} className='nav-link'>
                 {board.title}
               </Link>
             </li>
           ))}
-          <li>
+          <li key='createBoard'>
             <Link to='createBoard' className='nav-link'>
               + New Board
             </Link>

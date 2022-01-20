@@ -206,9 +206,9 @@ router.put(
 
       //if user is not authorized
       const boardUsers = board.users;
-      const userInBoard = boardUsers.filter((u) => u.user == req.user.id);
+      const userInBoard = boardUsers.find((u) => u.user == req.user.id);
 
-      if (userInBoard.length < 1 || userInBoard[0].permission != 'Owner') {
+      if (!userInBoard || userInBoard.permission != 'Owner') {
         return res.status(401).json({ errors: [{ msg: 'Access Denied' }] });
       }
 
@@ -225,7 +225,7 @@ router.put(
   }
 );
 
-// @route  POST api/boards/cards
+// @route  POST api/boards/:boardId/cards
 // @desc   create a new card
 // @access Private
 router.post(
@@ -244,7 +244,7 @@ router.post(
     //create new card with values
     const boardId = req.params.boardId;
     const { title, swimlane, column } = req.body;
-    let newCard = { board: boardId, title, column };
+    let newCard = { board: boardId, title, column, users: [user._id] };
 
     try {
       //check if board exists
@@ -256,6 +256,7 @@ router.post(
           .status(404)
           .json({ errors: [{ msg: 'Board does not exist' }] });
       }
+
       // //check if swimlane exists
       // if (board.swimlanes.filter((s) => s.id == swimlane).length < 1) {
       //   return res
@@ -263,6 +264,7 @@ router.post(
       //     .json({ errors: [{ msg: 'Swimlane does not exist' }] });
       // }
       //check if column exists
+
       if (!board.columns.includes(column)) {
         return res
           .status(404)
@@ -271,12 +273,12 @@ router.post(
 
       //if user is not authorized
       const boardUsers = board.users;
-      const userInBoard = boardUsers.filter((u) => u.user == req.user.id);
+      const userInBoard = boardUsers.find((u) => u.user == req.user.id);
 
       if (
-        userInBoard.length < 1 ||
-        (userInBoard[0].permission != 'Owner' &&
-          userInBoard[0].permission != 'Edit')
+        !userInBoard ||
+        (userInBoard.permission != 'Owner' &&
+          userInBoard.permission != 'Collaborator')
       ) {
         return res.status(401).json({ errors: [{ msg: 'Access Denied' }] });
       }
@@ -293,5 +295,102 @@ router.post(
     }
   }
 );
+
+// @route  PUT api/boards/cards/:cardId
+// @desc   edit a card
+// @access Private
+router.put(
+  '/cards/:cardId',
+  [
+    auth,
+    check('title', 'Card must have a title').trim().not().isEmpty(),
+    check('column', 'Card must have a column').trim().not().isEmpty(),
+    validationCheck,
+  ],
+  async (req, res) => {
+    const { cardId } = req.params;
+
+    //get new card details
+    const { title, column } = req.body;
+    let newCard = { title, column };
+
+    try {
+      let card = await Card.findById(cardId);
+
+      //check if card exists
+      if (!card) {
+        return res
+          .status(404)
+          .json({ errors: [{ msg: 'Card does not exist' }] });
+      }
+
+      //get board
+      const board = await Board.findById(card.board);
+
+      //check if this user belongs to the board
+      const userInBoard = board.users.find((u) => u.user == req.user.id);
+
+      if (
+        !userInBoard ||
+        (userInBoard.permission != 'Owner' &&
+          userInBoard.permission != 'Collaborator')
+      ) {
+        return res.status(401).json({ errors: [{ msg: 'Access Denied' }] });
+      }
+
+      //check if column exists
+      const columnExists = board.columns.find(
+        (c) => c.localeCompare(column) === 0
+      );
+
+      if (!columnExists) {
+        return res.json({ errors: [{ msg: 'Column does not exist' }] });
+      }
+
+      //card and column exist, overwrite the card
+      card.title = newCard.title;
+      card.column = newCard.column;
+
+      card = await card.save();
+
+      res.json(card);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Server Error');
+    }
+  }
+);
+
+// @route  DELETE api/boards/cards/:cardId
+// @desc   Delete a card
+// @access Private
+router.delete('/cards/:cardId', auth, async (req, res) => {
+  //get user and id from request
+  const userId = req.user._id;
+  const cardId = req.params.id;
+
+  //check if the id is valid
+  if (!ObjectId.isValid(cardId)) {
+    return res.status(404).json({ errors: [{ msg: 'Card does not exist' }] });
+  }
+
+  try {
+    //find the card
+    const card = await Card.findById(cardId);
+
+    //card does not exist
+    if (!card) {
+      return res.status(404).json({ errors: [{ msg: 'Card does not exist' }] });
+    }
+
+    //card does exist, remove it
+    card.remove();
+
+    res.json({ _id: cardId });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Server Error');
+  }
+});
 
 module.exports = router;

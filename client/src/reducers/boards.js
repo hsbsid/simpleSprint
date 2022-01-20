@@ -5,6 +5,8 @@ import {
   BOARD_CREATED,
   BOARD_DELETED,
   CARD_CREATED,
+  EDIT_CARD,
+  CARD_DELETED,
 } from '../actions/types';
 
 const initialState = {
@@ -33,6 +35,24 @@ export default function (state = initialState, action) {
       return {
         ...state,
         board: { ...state.board, cards: [...state.board.cards, payload] },
+      };
+    case EDIT_CARD:
+      return {
+        ...state,
+        board: {
+          ...state.board,
+          cards: state.board.cards.map((card) =>
+            card._id === payload._id ? { ...card, ...payload } : { ...card }
+          ),
+        },
+      };
+    case CARD_DELETED:
+      return {
+        ...state,
+        board: {
+          ...state.board,
+          cards: state.board.cards.filter((card) => card._id !== payload._id),
+        },
       };
     case BOARD_ERROR:
       return {

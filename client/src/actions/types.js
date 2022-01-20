@@ -12,6 +12,8 @@ export const BOARD_CREATED = 'BOARD_CREATED';
 export const BOARD_DELETED = 'BOARD_DELETED';
 export const BOARD_ERROR = 'BOARD_ERROR';
 export const CARD_CREATED = 'CARD_CREATED';
+export const EDIT_CARD = 'EDIT_CARD';
+export const CARD_DELETED = 'CARD_DELETED';
 
 //Alert Actions
 export const SET_ALERT = 'SET_ALERT';

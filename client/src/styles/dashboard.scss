@@ -33,6 +33,27 @@
       padding: 0;
       margin-bottom: 10px;
     }
+
+    p {
+      margin: 0;
+      padding: 0;
+
+      .deleteBoard {
+        max-width: 110px;
+        background: none;
+        color: #842029;
+        border: none;
+        padding: 0;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-size: 12px;
+
+        &:hover {
+          color: red;
+        }
+      }
+    }
+
     padding-bottom: 120px;
   }
 
@@ -44,14 +65,40 @@
       font-size: 12px;
     }
 
+    a {
+      padding: 10px;
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 12px;
+      background-color: $lightgrey;
+      width: 100%;
+      font-size: 12px;
+      text-transform: uppercase;
+      border-radius: 0 0 5px 5px;
+
+      &:hover {
+        color: $blue;
+      }
+    }
+
+    .isDraggingOver + a {
+      background: #d6dae2;
+    }
+
     div.container {
       padding: 25px 5px;
       background-color: $lightgrey;
-      border-radius: 5px;
+      border-radius: 5px 5px 0 0;
       min-height: 100px;
 
+      &.isDraggingOver {
+        background: #d6dae2;
+      }
+
       div.boardCard {
-        padding: 20px 0 20px 15px;
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 15px;
         margin-bottom: 5px;
         border-radius: 4px;
         background-color: #fff;
@@ -61,20 +108,35 @@
           margin-bottom: 30px;
         }
 
+        &.isDragging {
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
+            rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+          background-color: $skyblue;
+        }
+
         h6 {
           font-size: 14px;
           text-transform: none;
           color: $deepdarkblue !important;
         }
-      }
 
-      a {
-        margin-top: 35px;
-        margin-left: 5px;
-        font-size: 12px;
-        text-transform: uppercase;
-        &:hover {
-          color: $blue;
+        div i {
+          margin-right: 10px;
+          display: none;
+          cursor: pointer;
+          color: #818794;
+
+          &.fa-pencil:hover {
+            color: $blue;
+          }
+
+          &.fa-trash:hover {
+            color: #842029;
+          }
+        }
+
+        &:hover div i {
+          display: inline;
         }
       }
     }
@@ -101,6 +163,16 @@
       background-color: $skyblue;
       color: $blue;
     }
+  }
+}
+
+#popover-basic {
+  font-size: 10px;
+  .popover-body {
+    padding: 10px;
+  }
+  button {
+    font-size: 10px;
   }
 }
 

@@ -53,9 +53,7 @@ const CreateBoard = (props) => {
 
   //when a collaborator is added from the search bar
   const collaboratorsOnSelect = (resultUser) => {
-    resultUser = resultUser.trim();
-
-    if (!resultUser || resultUser == '') {
+    if (!resultUser) {
       return setAlert('Invalid User', 'danger');
     }
 

@@ -9,6 +9,7 @@ import {
   getBoard,
   deleteBoard,
   addCard,
+  editCard,
 } from '../../actions/boards';
 
 //components
@@ -24,6 +25,7 @@ import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Column from './Column';
+import Button from 'react-bootstrap/Button';
 
 const Dashboard = ({
   user,
@@ -32,6 +34,7 @@ const Dashboard = ({
   getBoard,
   deleteBoard,
   addCard,
+  editCard,
 }) => {
   //get board id from the dynamic url
   const { id } = useParams();
@@ -71,6 +74,7 @@ const Dashboard = ({
   const onDeleteBoard = async (e, id) => {
     e.preventDefault();
 
+    setDeleteModal(false);
     await deleteBoard(id);
   };
 
@@ -92,6 +96,10 @@ const Dashboard = ({
   //cards
   const onAddCard = async (cardData, boardId) => {
     await addCard(cardData, boardId);
+  };
+
+  const onEditCard = async (cardId, cardData) => {
+    await editCard(cardId, cardData);
   };
 
   return !boards.loading ? (
@@ -122,6 +130,7 @@ const Dashboard = ({
                 onAddColumn={onAddColumn}
                 onDeleteColumn={onDeleteColumn}
                 onAddCard={onAddCard}
+                onEditCard={onEditCard}
               />
             ) : (
               <Loading />
@@ -129,6 +138,20 @@ const Dashboard = ({
           </Col>
         </Row>
       </Container>
+      <Modal show={deleteModal}>
+        <Modal.Header>Are you sure?</Modal.Header>
+        <Modal.Footer>
+          <Button variant='danger' onClick={(e) => onDeleteBoard(e, id)}>
+            Yes, delete
+          </Button>
+          <Button
+            variant='outline-primary'
+            onClick={() => setDeleteModal(false)}
+          >
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Fragment>
   ) : (
     <Loading />
@@ -142,6 +165,7 @@ Dashboard.propTypes = {
   getBoard: PropTypes.func.isRequired,
   deleteBoard: PropTypes.func.isRequired,
   addCard: PropTypes.func.isRequired,
+  editCard: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -154,4 +178,5 @@ export default connect(mapStateToProps, {
   getBoard,
   deleteBoard,
   addCard,
+  editCard,
 })(Dashboard);

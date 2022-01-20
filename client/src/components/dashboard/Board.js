@@ -24,19 +24,41 @@ const Board = ({
   onDeleteBoard,
   onLeaveBoard,
   onAddCard,
+  onEditCard,
 }) => {
   //create a board state
   const [cardModal, setCardModal] = useState({
     show: false,
+    title: '',
     column: null,
-    title: null,
+    type: null,
+    card: null,
   });
+
+  const [columns, setColumns] = useState(
+    board.columns.map((column) => ({
+      name: column,
+      cards: board.cards.filter((c) => c.column.localeCompare(column) === 0),
+    }))
+  );
+
+  //update columns when cards change in redux store
+  useEffect(
+    () =>
+      setColumns(
+        board.columns.map((column) => ({
+          name: column,
+          cards: board.cards.filter((c) => c.column.localeCompare(column) == 0),
+        }))
+      ),
+    [board.cards]
+  );
 
   const onCardModalChange = (e) => {
     setCardModal({ ...cardModal, [e.target.name]: e.target.value });
   };
 
-  const addCard = (e, cardData) => {
+  const addCard = (e) => {
     e.preventDefault();
 
     const { title, column } = cardModal;
@@ -50,12 +72,63 @@ const Board = ({
     closeCardModal();
   };
 
-  const closeCardModal = () => {
-    setCardModal({ show: false, column: null, title: null });
+  const editCard = (e, cardId) => {
+    e.preventDefault();
+
+    const { title, column } = cardModal;
+
+    //if title is empty
+    if (!title || title.trim() === '') {
+      return setAlert('Please enter a card title', 'danger');
+    }
+
+    onEditCard(cardId, { title: title.trim(), column });
+    closeCardModal();
   };
 
-  const onDragEnd = () => {
-    ///
+  const closeCardModal = () => {
+    setCardModal({
+      ...cardModal,
+      show: false,
+      column: null,
+      title: '',
+      card: null,
+      type: null,
+    });
+  };
+
+  const onDragEnd = async ({ draggableId, source, destination }) => {
+    //if there is no destination, or if destination is the same as source, do nothing
+    if (!destination || destination.droppableId == source.droppableId) return;
+
+    //get the card
+    const card = board.cards.find(
+      (c) => c._id.localeCompare(draggableId) === 0
+    );
+
+    //update the component state
+    //shallow copy columns
+    const newColumns = [...columns];
+
+    const srcColumn = newColumns.find(
+      (c) => c.name.localeCompare(source.droppableId) == 0
+    ); //remove the card from the source array
+
+    srcColumn.cards.splice(source.index, 1);
+
+    const destColumn = newColumns.find(
+      (c) => c.name.localeCompare(destination.droppableId) == 0
+    );
+
+    destColumn.cards.splice(destination.index, 0, card);
+
+    setColumns([...newColumns]);
+
+    const title = card.title;
+
+    const column = destination.droppableId;
+
+    await onEditCard(card._id, { title, column });
   };
 
   return (
@@ -64,12 +137,14 @@ const Board = ({
         <Row id='boardHeader'>
           <h3>{board.title}</h3>
           {owner ? (
-            <Button
-              className='deleteBoard'
-              onClick={(e) => onDeleteBoard(e, board._id)}
-            >
-              Delete Board <i className='fas fa-trash'></i>
-            </Button>
+            <p>
+              <a
+                className='deleteBoard'
+                onClick={(e) => onDeleteBoard(e, board._id)}
+              >
+                Delete Board <i className='fas fa-trash'></i>
+              </a>
+            </p>
           ) : (
             <Button
               className='deleteBoard'
@@ -81,15 +156,33 @@ const Board = ({
         </Row>
         <Row lg={4} md={4} className='flex-nowrap' style={{ height: '95%' }}>
           <DragDropContext onDragEnd={onDragEnd}>
-            {board.columns.map((col) => (
+            {columns.map(({ name: col, cards }) => (
               <Column
                 addCard={() => {
-                  setCardModal({ show: true, column: col });
+                  setCardModal({
+                    ...cardModal,
+                    title: '',
+                    show: true,
+                    column: col,
+                    type: 'create',
+                    card: null,
+                  });
+                }}
+                editCard={(c) => {
+                  setCardModal({
+                    ...cardModal,
+                    title: c.title,
+                    show: true,
+                    column: col,
+                    type: 'edit',
+                    card: c,
+                  });
+                }}
+                deleteCard={(id) => {
+                  console.log(`Delete ${id}`);
                 }}
                 title={col}
-                cards={board.cards.filter(
-                  (card) => card.column.localeCompare(col) === 0
-                )}
+                cards={cards}
               />
             ))}
             {owner && (
@@ -104,9 +197,13 @@ const Board = ({
         </Row>
       </Container>
 
-      <Modal id='addCardModal' show={cardModal.show} onHide={closeCardModal}>
+      <Modal
+        id='addCardModal'
+        show={cardModal.show && cardModal.type.localeCompare('create') === 0}
+        onHide={closeCardModal}
+      >
         <Modal.Header closeButton>
-          Add Card to {`Column: ${cardModal.column}`}
+          Add Card to {`${cardModal.column}`}
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={(e) => addCard(e)}>
@@ -123,6 +220,35 @@ const Board = ({
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={(e) => addCard(e)}>Add</Button>
+          <Button variant='outline-danger' onClick={closeCardModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        id='addCardModal'
+        show={cardModal.show && cardModal.type.localeCompare('edit') === 0}
+        onHide={closeCardModal}
+      >
+        <Modal.Header closeButton>Edit Card</Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={(e) => editCard(e, cardModal.card.id)}>
+            <FloatingLabel label='Card Title'>
+              <Form.Control
+                name='title'
+                value={cardModal.title}
+                type='text'
+                onChange={(e) => onCardModalChange(e)}
+                required
+              ></Form.Control>
+            </FloatingLabel>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={(e) => editCard(e, cardModal.card.id)}>
+            Update
+          </Button>
           <Button variant='outline-danger' onClick={closeCardModal}>
             Close
           </Button>

@@ -14,15 +14,23 @@ const Column = (props) => {
     <Col className='boardColumn'>
       <h6>{props.title}</h6>
       <Droppable droppableId={props.title}>
-        {(provided) => (
+        {(provided, snapshot) => (
           <div
             {...provided.droppableProps}
-            className='container'
+            className={`container ${
+              snapshot.isDraggingOver && 'isDraggingOver'
+            }`}
             bg='blue-100'
             ref={provided.innerRef}
           >
             {props.cards.map((c, index) => (
-              <Card id={c._id} title={c.title} index={index}></Card>
+              <Card
+                id={c._id}
+                title={c.title}
+                index={index}
+                onEditCard={(c) => props.editCard(c)}
+                onDeleteCard={(id) => props.deleteCard(id)}
+              ></Card>
             ))}
 
             {provided.placeholder}
