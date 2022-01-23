@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 
 //action
 import { setAlert } from '../../actions/alert';
+//actions
+import { addCard, editCard, deleteCard } from '../../actions/boards';
 
 //components
 import { DragDropContext } from 'react-beautiful-dnd';
@@ -19,12 +21,13 @@ import Column from './Column';
 
 const Board = ({
   setAlert,
+  addCard,
+  editCard,
+  deleteCard,
   board,
   owner,
   onDeleteBoard,
   onLeaveBoard,
-  onAddCard,
-  onEditCard,
 }) => {
   //create a board state
   const [cardModal, setCardModal] = useState({
@@ -54,36 +57,49 @@ const Board = ({
     [board.cards]
   );
 
+  //column adding/editing/deleting ================
+
+  // Card adding/editing/deleting ==================
+  const onAddCard = async (e) => {
+    e.preventDefault();
+
+    const { title, column } = cardModal;
+
+    //if title is empty
+    if (!title || title.trim() === '') {
+      return setAlert('Please enter a card title', 'danger');
+    }
+
+    await addCard({ title: title.trim(), column }, board._id);
+    closeCardModal();
+  };
+
+  const onEditCard = async (e, cardId) => {
+    e.preventDefault();
+
+    const { title, column } = cardModal;
+
+    //if title is empty
+    if (!title || title.trim() === '') {
+      return setAlert('Please enter a card title', 'danger');
+    }
+
+    await editCard(cardId, { title: title.trim(), column });
+    closeCardModal();
+  };
+
+  const onDeleteCard = async (e, cardId) => {
+    e.preventDefault();
+
+    console.log(cardId);
+
+    await deleteCard(cardId);
+    closeCardModal();
+  };
+
+  //Card Modal =================
   const onCardModalChange = (e) => {
     setCardModal({ ...cardModal, [e.target.name]: e.target.value });
-  };
-
-  const addCard = (e) => {
-    e.preventDefault();
-
-    const { title, column } = cardModal;
-
-    //if title is empty
-    if (!title || title.trim() === '') {
-      return setAlert('Please enter a card title', 'danger');
-    }
-
-    onAddCard({ title: title.trim(), column }, board._id);
-    closeCardModal();
-  };
-
-  const editCard = (e, cardId) => {
-    e.preventDefault();
-
-    const { title, column } = cardModal;
-
-    //if title is empty
-    if (!title || title.trim() === '') {
-      return setAlert('Please enter a card title', 'danger');
-    }
-
-    onEditCard(cardId, { title: title.trim(), column });
-    closeCardModal();
   };
 
   const closeCardModal = () => {
@@ -97,6 +113,7 @@ const Board = ({
     });
   };
 
+  // Drag and Drop =================
   const onDragEnd = async ({ draggableId, source, destination }) => {
     //if there is no destination, or if destination is the same as source, do nothing
     if (!destination || destination.droppableId == source.droppableId) return;
@@ -158,7 +175,7 @@ const Board = ({
           <DragDropContext onDragEnd={onDragEnd}>
             {columns.map(({ name: col, cards }) => (
               <Column
-                addCard={() => {
+                onAddCard={() => {
                   setCardModal({
                     ...cardModal,
                     title: '',
@@ -168,7 +185,7 @@ const Board = ({
                     card: null,
                   });
                 }}
-                editCard={(c) => {
+                onEditCard={(c) => {
                   setCardModal({
                     ...cardModal,
                     title: c.title,
@@ -178,9 +195,7 @@ const Board = ({
                     card: c,
                   });
                 }}
-                deleteCard={(id) => {
-                  console.log(`Delete ${id}`);
-                }}
+                onDeleteCard={(e, id) => onDeleteCard(e, id)}
                 title={col}
                 cards={cards}
               />
@@ -206,7 +221,7 @@ const Board = ({
           Add Card to {`${cardModal.column}`}
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={(e) => addCard(e)}>
+          <Form onSubmit={(e) => onAddCard(e)}>
             <FloatingLabel label='Card Title'>
               <Form.Control
                 name='title'
@@ -219,7 +234,7 @@ const Board = ({
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={(e) => addCard(e)}>Add</Button>
+          <Button onClick={(e) => onAddCard(e)}>Add</Button>
           <Button variant='outline-danger' onClick={closeCardModal}>
             Close
           </Button>
@@ -233,7 +248,7 @@ const Board = ({
       >
         <Modal.Header closeButton>Edit Card</Modal.Header>
         <Modal.Body>
-          <Form onSubmit={(e) => editCard(e, cardModal.card.id)}>
+          <Form onSubmit={(e) => onEditCard(e, cardModal.card.id)}>
             <FloatingLabel label='Card Title'>
               <Form.Control
                 name='title'
@@ -246,7 +261,7 @@ const Board = ({
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={(e) => editCard(e, cardModal.card.id)}>
+          <Button onClick={(e) => onEditCard(e, cardModal.card.id)}>
             Update
           </Button>
           <Button variant='outline-danger' onClick={closeCardModal}>
@@ -258,6 +273,13 @@ const Board = ({
   );
 };
 
-Board.propTypes = { setAlert: PropTypes.func.isRequired };
+Board.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  addCard: PropTypes.func.isRequired,
+  editCard: PropTypes.func.isRequired,
+  deleteCard: PropTypes.func.isRequired,
+};
 
-export default connect(null, { setAlert })(Board);
+export default connect(null, { setAlert, addCard, editCard, deleteCard })(
+  Board
+);

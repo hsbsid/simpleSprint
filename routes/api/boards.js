@@ -367,7 +367,7 @@ router.put(
 router.delete('/cards/:cardId', auth, async (req, res) => {
   //get user and id from request
   const userId = req.user._id;
-  const cardId = req.params.id;
+  const { cardId } = req.params;
 
   //check if the id is valid
   if (!ObjectId.isValid(cardId)) {
@@ -377,7 +377,7 @@ router.delete('/cards/:cardId', auth, async (req, res) => {
   try {
     //find the card
     const card = await Card.findById(cardId);
-
+    console.log(cardId);
     //card does not exist
     if (!card) {
       return res.status(404).json({ errors: [{ msg: 'Card does not exist' }] });

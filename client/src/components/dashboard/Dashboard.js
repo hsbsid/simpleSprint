@@ -84,24 +84,6 @@ const Dashboard = ({
     console.log(`Removing ${user._id} from Board ${id}`);
   };
 
-  //column add/remove
-  const onAddColumn = async (boardId, columnName) => {
-    console.log(`Add column ${columnName} to board ${boardId}`);
-  };
-
-  const onDeleteColumn = async (boardId, columnName) => {
-    console.log(`Remove column ${columnName} from board ${boardId}`);
-  };
-
-  //cards
-  const onAddCard = async (cardData, boardId) => {
-    await addCard(cardData, boardId);
-  };
-
-  const onEditCard = async (cardId, cardData) => {
-    await editCard(cardId, cardData);
-  };
-
   return !boards.loading ? (
     <Fragment>
       <Container id='Dashboard' fluid>
@@ -127,10 +109,6 @@ const Dashboard = ({
                 }
                 onDeleteBoard={(e) => setDeleteModal(true)}
                 onLeaveBoard={onLeaveBoard}
-                onAddColumn={onAddColumn}
-                onDeleteColumn={onDeleteColumn}
-                onAddCard={onAddCard}
-                onEditCard={onEditCard}
               />
             ) : (
               <Loading />

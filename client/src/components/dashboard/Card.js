@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 import Button from 'react-bootstrap/Button';
 import Popover from 'react-bootstrap/Popover';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Overlay from 'react-bootstrap/Overlay';
 
 const Card = (props) => {
   const { title, id, index, onEditCard, onDeleteCard } = props;
@@ -18,8 +18,8 @@ const Card = (props) => {
       <Popover.Body>
         <Button
           variant='danger'
-          onClick={() => {
-            onDeleteCard(id);
+          onClick={(e) => {
+            onDeleteCard(e, id);
             setDeletePopover(false);
           }}
         >
@@ -28,6 +28,8 @@ const Card = (props) => {
       </Popover.Body>
     </Popover>
   );
+
+  const target = React.createRef();
 
   return (
     <Fragment>
@@ -45,17 +47,21 @@ const Card = (props) => {
                 className='fas fa-pencil'
                 onClick={() => onEditCard({ id, title })}
               ></i>
-              <OverlayTrigger
-                rootClose
+              <Overlay
+                rootClose={true}
+                target={target}
                 show={deletePopover}
                 placement='top'
                 overlay={confirmDeletePopover}
+                onHide={() => setDeletePopover(false)}
               >
-                <i
-                  // onClick={() => setDeletePopover(true)}
-                  className='fas fa-trash'
-                ></i>
-              </OverlayTrigger>
+                {confirmDeletePopover}
+              </Overlay>
+              <i
+                ref={target}
+                onClick={() => setDeletePopover(true)}
+                className='fas fa-trash'
+              ></i>
             </div>
           </div>
         )}

@@ -28,8 +28,8 @@ const Column = (props) => {
                 id={c._id}
                 title={c.title}
                 index={index}
-                onEditCard={(c) => props.editCard(c)}
-                onDeleteCard={(id) => props.deleteCard(id)}
+                onEditCard={(c) => props.onEditCard(c)}
+                onDeleteCard={(e, id) => props.onDeleteCard(e, id)}
               ></Card>
             ))}
 
@@ -37,7 +37,7 @@ const Column = (props) => {
           </div>
         )}
       </Droppable>
-      <a onClick={() => props.addCard()}>
+      <a onClick={() => props.onAddCard()}>
         <i className='fas fa-plus'></i> Add Card
       </a>
     </Col>
