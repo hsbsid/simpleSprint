@@ -52,7 +52,11 @@ const Dashboard = ({
   }, [id]);
 
   //state for modals
-  const [deleteModal, setDeleteModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({
+    show: false,
+    type: null,
+    id: null,
+  });
 
   //if boards are not being loaded, and no id is provided (in url) OR the board loaded is null (id is invalid)
   if (
@@ -74,7 +78,7 @@ const Dashboard = ({
   const onDeleteBoard = async (e, id) => {
     e.preventDefault();
 
-    setDeleteModal(false);
+    setDeleteModal({ show: false, type: null, id: null });
     await deleteBoard(id);
   };
 
@@ -107,7 +111,9 @@ const Dashboard = ({
                       u.permission.localeCompare('Owner') === 0
                   ).length > 0
                 }
-                onDeleteBoard={(e) => setDeleteModal(true)}
+                onDeleteBoard={(id, type) =>
+                  setDeleteModal({ show: true, type: type, id: id })
+                }
                 onLeaveBoard={onLeaveBoard}
               />
             ) : (
@@ -116,15 +122,20 @@ const Dashboard = ({
           </Col>
         </Row>
       </Container>
-      <Modal show={deleteModal}>
+      <Modal show={deleteModal.show}>
         <Modal.Header>Are you sure?</Modal.Header>
         <Modal.Footer>
-          <Button variant='danger' onClick={(e) => onDeleteBoard(e, id)}>
-            Yes, delete
+          <Button
+            variant='danger'
+            onClick={(e) => onDeleteBoard(e, deleteModal.id)}
+          >
+            {`Yes, ${deleteModal.type}`}
           </Button>
           <Button
             variant='outline-primary'
-            onClick={() => setDeleteModal(false)}
+            onClick={() =>
+              setDeleteModal({ show: false, type: null, id: null })
+            }
           >
             Cancel
           </Button>

@@ -117,7 +117,7 @@ router.post(
 );
 
 // @route  DELETE api/boards/:id
-// @desc   Delete a board
+// @desc   Delete a board, or remove user from the board
 // @access Private
 router.delete('/:id', [auth, validationCheck], async (req, res) => {
   //get user and id from request
@@ -130,10 +130,10 @@ router.delete('/:id', [auth, validationCheck], async (req, res) => {
   }
 
   try {
-    //find the board as long as this user is the owner
+    //find the board as long as this user is in the board
     const board = await Board.findOne({
       _id: boardId,
-      user: { $elemMatch: { user: userId, permission: 'Owner' } },
+      users: { $elemMatch: { user: userId } },
     });
 
     //board does not exist under this user
@@ -143,8 +143,22 @@ router.delete('/:id', [auth, validationCheck], async (req, res) => {
         .json({ errors: [{ msg: 'Board does not exist' }] });
     }
 
-    //board does exist, remove it
-    board.remove();
+    //find this user's permissions in the board
+    const users = board.users;
+    console.log(users);
+    const permission = users.find((u) => userId.equals(u.user)).permission;
+
+    //if owner, remove the board
+    if (permission.localeCompare('Owner') === 0) {
+      //board does exist, remove it
+      board.remove();
+    } else {
+      //otherwise just remove the user from the board
+      const newUsers = users.filter((u) => !userId.equals(u.user));
+      board.users = newUsers;
+
+      board.save();
+    }
 
     res.json({ _id: boardId });
   } catch (error) {

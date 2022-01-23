@@ -91,8 +91,6 @@ const Board = ({
   const onDeleteCard = async (e, cardId) => {
     e.preventDefault();
 
-    console.log(cardId);
-
     await deleteCard(cardId);
     closeCardModal();
   };
@@ -157,18 +155,20 @@ const Board = ({
             <p>
               <a
                 className='deleteBoard'
-                onClick={(e) => onDeleteBoard(e, board._id)}
+                onClick={(e) => onDeleteBoard(board._id, 'Delete')}
               >
                 Delete Board <i className='fas fa-trash'></i>
               </a>
             </p>
           ) : (
-            <Button
-              className='deleteBoard'
-              onClick={(e) => onLeaveBoard(e, board._id)}
-            >
-              Leave this board <i className='fas fa-times'></i>
-            </Button>
+            <p>
+              <a
+                className='deleteBoard'
+                onClick={(e) => onDeleteBoard(board._id, 'Leave')}
+              >
+                Leave this Board <i className='fas fa-times'></i>
+              </a>
+            </p>
           )}
         </Row>
         <Row lg={4} md={4} className='flex-nowrap' style={{ height: '95%' }}>
