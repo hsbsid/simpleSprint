@@ -6,6 +6,7 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   LOGOUT,
+  BOARD_LOADING,
 } from '../actions/types';
 import { setAlert } from './alert';
 import { createBoard, addCard } from './boards';
@@ -83,6 +84,10 @@ export const register = (registerFormData) => async (dispatch) => {
 export const registerDemo = () => async (dispatch) => {
   try {
     const res = await api.post('/users/demo');
+
+    dispatch({
+      type: BOARD_LOADING,
+    });
 
     dispatch({
       type: AUTH_SUCCESS,

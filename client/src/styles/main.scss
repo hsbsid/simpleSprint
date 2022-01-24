@@ -71,16 +71,24 @@ body {
 }
 
 .searchbar {
+  position: relative;
   .searchSuggestions {
     position: absolute;
     background-color: #fff;
     box-shadow: $lightgrey 2px;
     z-index: 5;
+    max-height: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border: $lightgrey solid 2px;
+    border-top: none;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
 
     ul {
       list-style: none;
       padding: 10px 0;
-      border: $lightgrey 2px solid;
+      margin: 0;
+      // border: $lightgrey 1px solid;
 
       &.empty {
         display: none !important;

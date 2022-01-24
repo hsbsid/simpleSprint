@@ -7,6 +7,7 @@ import {
   CARD_CREATED,
   EDIT_CARD,
   CARD_DELETED,
+  BOARD_LOADING,
 } from '../actions/types';
 
 const initialState = {
@@ -19,6 +20,8 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case BOARD_LOADING:
+      return { ...state, loading: true };
     case LOAD_BOARD:
       return { ...state, board: { ...payload, loading: false } };
     case LOAD_ALL_BOARDS:
