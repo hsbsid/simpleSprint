@@ -117,7 +117,7 @@ export const registerDemo = () => async (dispatch) => {
       await dispatch(addCard(card, demoBoardId));
     });
 
-    return true;
+    return demoBoardId;
   } catch (error) {
     const errors = error.response.data.errors;
 

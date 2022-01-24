@@ -18,9 +18,11 @@ import Stack from 'react-bootstrap/Stack';
 import Col from 'react-bootstrap/Col';
 
 const DemoUser = ({ auth, registerDemo, setAlert }) => {
+  const [boardId, setBoardId] = useState(null);
+
   //if the user is logged in, redirect them
-  if (auth.authenticated) {
-    return <Redirect to='/dashboard' />;
+  if (auth.authenticated && boardId) {
+    return <Redirect to={`/dashboard/${boardId}`} />;
   }
 
   return (
@@ -37,7 +39,8 @@ const DemoUser = ({ auth, registerDemo, setAlert }) => {
             </span>
             <Button
               onClick={async () => {
-                await registerDemo();
+                setBoardId(await registerDemo());
+
                 setAlert('Welcome to simpleSprint!', 'success');
               }}
             >
