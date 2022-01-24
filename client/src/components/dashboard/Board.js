@@ -18,6 +18,7 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Column from './Column';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 const Board = ({
   setAlert,
@@ -29,7 +30,7 @@ const Board = ({
   onDeleteBoard,
   onLeaveBoard,
 }) => {
-  //create a board state
+  //create states for the modals
   const [cardModal, setCardModal] = useState({
     show: false,
     title: '',
@@ -38,6 +39,9 @@ const Board = ({
     card: null,
   });
 
+  const [boardModal, setBoardModal] = useState(false);
+
+  //store columns/cards as component state
   const [columns, setColumns] = useState(
     board.columns.map((column) => ({
       name: column,
@@ -150,7 +154,13 @@ const Board = ({
     <Fragment>
       <Container>
         <Row id='boardHeader'>
-          <h3>{board.title}</h3>
+          <h3>
+            {board.title}
+            <i
+              class='fas fa-ellipsis-h'
+              onClick={() => setBoardModal(true)}
+            ></i>
+          </h3>
           {owner ? (
             <p>
               <a
@@ -265,6 +275,37 @@ const Board = ({
             Update
           </Button>
           <Button variant='outline-danger' onClick={closeCardModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        id='boardModal'
+        show={boardModal}
+        onHide={() => setBoardModal(false)}
+      >
+        <Modal.Header closeButton>
+          <h3>{board.title}</h3>
+          <h6>Board Details</h6>
+        </Modal.Header>
+        <Modal.Body>
+          <ListGroup>
+            <ListGroup.Item>Columns</ListGroup.Item>
+            {board.columns.map((c) => (
+              <ListGroup.Item>{c}</ListGroup.Item>
+            ))}
+          </ListGroup>
+
+          <ListGroup>
+            <ListGroup.Item>Collaborators</ListGroup.Item>
+            {board.users.map((u) => (
+              <ListGroup.Item>{u.user}</ListGroup.Item>
+            ))}
+          </ListGroup>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant='outline-danger' onClick={() => setBoardModal(false)}>
             Close
           </Button>
         </Modal.Footer>

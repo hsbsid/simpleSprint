@@ -32,6 +32,7 @@
   }
 
   footer {
+    font-size: 14px;
     .logo {
       color: $blue;
       font-weight: bold;
@@ -44,7 +45,8 @@
     }
 
     a > * {
-      color: darkgrey;
+      color: $darkgrey;
+      margin-left: 8px;
     }
 
     a:hover * {

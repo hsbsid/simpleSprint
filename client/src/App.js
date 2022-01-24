@@ -8,10 +8,12 @@ import {
 } from 'react-router-dom';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import DemoUser from './components/auth/DemoUser';
 import Navbar from './components/layout/Navbar';
 import Alert from './components/layout/Alert';
 import Dashboard from './components/dashboard/Dashboard';
 import Loading from './components/layout/Loading';
+import MyInfo from './components/layout/MyInfo';
 
 import PrivateRoute from './components/routing/PrivateRoute';
 
@@ -45,12 +47,14 @@ const App = () => {
       <Router>
         <Fragment>
           <Alert />
+          <PrivateRoute component={MyInfo} />
           <Switch>
             <Route exact path='/'>
-              <Redirect to='/signup' />
+              <Redirect to='/demoUser' />
             </Route>
             <Route exact path='/login' component={Login} />
             <Route exact path='/signup' component={Register} />
+            <Route exact path='/demoUser' component={DemoUser} />
             <PrivateRoute
               exact
               path={['/dashboard', '/dashboard/:id']}

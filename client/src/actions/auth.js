@@ -8,6 +8,7 @@ import {
   LOGOUT,
 } from '../actions/types';
 import { setAlert } from './alert';
+import { createBoard, addCard } from './boards';
 import setAuthToken from '../utils/setAuthToken';
 
 //function to get all users
@@ -60,6 +61,56 @@ export const register = (registerFormData) => async (dispatch) => {
 
     //load the user into state based on token
     dispatch(loadUser());
+
+    return true;
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    dispatch({
+      type: AUTH_FAIL,
+    });
+
+    if (errors) {
+      errors.forEach((e) => {
+        dispatch(setAlert(e.msg, 'danger'));
+      });
+    }
+
+    return false;
+  }
+};
+
+export const registerDemo = () => async (dispatch) => {
+  try {
+    const res = await api.post('/users/demo');
+
+    dispatch({
+      type: AUTH_SUCCESS,
+      payload: res.data,
+    });
+
+    //load the user into state based on token
+    dispatch(loadUser());
+
+    //add a demo board to the user
+    const demoBoardId = await dispatch(
+      createBoard({
+        title: 'Demo Board',
+        columns: ['Backlog', 'In Progress', 'Done', 'Blocked'],
+        users: [],
+      })
+    );
+
+    //add some cards to the board
+    const demoCards = [
+      { title: 'To do', column: 'Backlog' },
+      { title: 'Doing', column: 'In Progress' },
+      { title: 'Done', column: 'Done' },
+    ];
+
+    demoCards.forEach(async (card) => {
+      await dispatch(addCard(card, demoBoardId));
+    });
 
     return true;
   } catch (error) {

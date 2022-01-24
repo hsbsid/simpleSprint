@@ -32,6 +32,22 @@
     h3 {
       padding: 0;
       margin-bottom: 10px;
+
+      i.fas {
+        display: none;
+        margin-left: 15px;
+        font-size: 22px;
+        color: #a8a8a8;
+
+        &:hover {
+          cursor: pointer;
+          color: $blue;
+        }
+      }
+
+      &:hover i.fas {
+        display: inline;
+      }
     }
 
     p {
@@ -82,7 +98,7 @@
     }
 
     .isDraggingOver + a {
-      background: #d6dae2;
+      background: $grey;
     }
 
     div.container {
@@ -92,7 +108,7 @@
       min-height: 100px;
 
       &.isDraggingOver {
-        background: #d6dae2;
+        background: $grey;
       }
 
       div.boardCard {
@@ -162,6 +178,46 @@
     &:hover {
       background-color: $skyblue;
       color: $blue;
+    }
+  }
+}
+
+#boardModal {
+  .list-group {
+    margin-top: 15px;
+
+    .list-group-item {
+      min-height: 56px;
+    }
+
+    div.list-group-item {
+      &:first-child {
+        font-size: 12px;
+        font-weight: 600;
+        p {
+          font-weight: 300;
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    button.list-group-item {
+      background-color: #fff;
+      span {
+        pointer-events: none;
+        font-size: 10px;
+        font-style: italic;
+        display: none;
+        color: #842029;
+      }
+
+      &:hover {
+        color: #000;
+        background-color: #f8d7da;
+        span {
+          display: block;
+        }
+      }
     }
   }
 }

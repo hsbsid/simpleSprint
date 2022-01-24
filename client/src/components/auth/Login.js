@@ -9,6 +9,7 @@ import { setAlert } from '../../actions/alert';
 
 //components
 import AuthNav from './AuthNav';
+import MyLinks from '../layout/MyLinks';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
@@ -95,13 +96,16 @@ const Login = ({ auth, login, setAlert }) => {
             <span>
               New to simpleSprint? <Link to='/signup'>Sign up</Link>
             </span>
+            <span>
+              Or,&nbsp;
+              <Link to='/demoUser'>use a temporary demo account</Link>
+            </span>
 
             <footer>
               <h4 className='logo'>simpleSprint</h4>
-              <a href='https://github.com/hsbsid'>
-                <span>by Haseeb Siddiqui </span>
-                <i class='fab fa-github'></i>
-              </a>
+
+              <span>by Haseeb Siddiqui </span>
+              <MyLinks />
             </footer>
           </Stack>
         </Col>

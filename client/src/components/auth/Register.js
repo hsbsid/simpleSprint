@@ -15,6 +15,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Nav from 'react-bootstrap/Nav';
 import AuthNav from './AuthNav';
+import MyLinks from '../layout/MyLinks';
 
 const Register = ({ setAlert, register, auth }) => {
   const [formData, setFormData] = useState({
@@ -118,13 +119,16 @@ const Register = ({ setAlert, register, auth }) => {
             <span>
               Already have an account? <Link to='/login'>Log in</Link>
             </span>
+            <span>
+              Or,&nbsp;
+              <Link to='/demoUser'>use a temporary demo account</Link>
+            </span>
 
             <footer>
               <h4 className='logo'>simpleSprint</h4>
-              <a href='https://github.com/hsbsid'>
-                <span>by Haseeb Siddiqui </span>
-                <i class='fab fa-github'></i>
-              </a>
+
+              <span>by Haseeb Siddiqui </span>
+              <MyLinks />
             </footer>
           </Stack>
         </Col>

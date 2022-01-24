@@ -20,6 +20,7 @@ import Button from 'react-bootstrap/Button';
 
 const CreateBoard = (props) => {
   const { getAllUsers, createBoard, setAlert } = props;
+  const { user } = props.auth;
 
   //create a state for the form data
   // title: title of board
@@ -174,7 +175,7 @@ const CreateBoard = (props) => {
               Board Collaborators
               <p>Add teammates to your board</p>
             </ListGroup.Item>
-            <ListGroup.Item>
+            <ListGroup.Item id={user._id}>
               Me <Badge>Owner</Badge>
             </ListGroup.Item>
             {collaborators.map((user) => (
@@ -194,10 +195,12 @@ const CreateBoard = (props) => {
           </ListGroup>
           <SearchBar
             label='Search for more people...'
-            table={users.userList.map((u) => ({
-              id: u._id,
-              value: u.name,
-            }))}
+            table={users.userList
+              .filter((u) => u._id !== user._id)
+              .map((u) => ({
+                id: u._id,
+                value: `${u.name} (${u.email})`,
+              }))}
             onSelectResult={collaboratorsOnSelect}
           />
 
@@ -247,11 +250,16 @@ const CreateBoard = (props) => {
 };
 
 CreateBoard.propTypes = {
+  user: PropTypes.object.isRequired,
   getAllUsers: PropTypes.func.isRequired,
   createBoard: PropTypes.func.isRequired,
   setAlert: PropTypes.func.isRequired,
 };
 
-export default connect(null, { getAllUsers, createBoard, setAlert })(
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+
+export default connect(mapStateToProps, { getAllUsers, createBoard, setAlert })(
   CreateBoard
 );

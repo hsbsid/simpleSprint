@@ -38,6 +38,20 @@ const AuthNav = (props) => {
           </Link>
         )}
       ></Nav.Link>
+
+      <Nav.Link
+        eventKey='/demoUser'
+        as={() => (
+          <Link
+            className={`nav-link ${
+              window.location.pathname == '/demoUser' ? 'active' : ''
+            }`}
+            to='/demoUser'
+          >
+            Demo Account
+          </Link>
+        )}
+      ></Nav.Link>
     </Nav>
   );
 };
