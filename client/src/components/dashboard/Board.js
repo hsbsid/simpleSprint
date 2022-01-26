@@ -18,7 +18,7 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Column from './Column';
-import ListGroup from 'react-bootstrap/ListGroup';
+import TextEdit from '../inputs/TextEdit';
 
 const Board = ({
   setAlert,
@@ -27,6 +27,7 @@ const Board = ({
   deleteCard,
   board,
   owner,
+  onEditBoard,
   onDeleteBoard,
   onLeaveBoard,
 }) => {
@@ -39,7 +40,20 @@ const Board = ({
     card: null,
   });
 
-  const [boardModal, setBoardModal] = useState(false);
+  //state for titleEditing
+  const [titleEdit, setTitleEdit] = useState({
+    edit: false,
+    value: board.title,
+  });
+
+  //reset edit state on new board
+  useEffect(() => setTitleEdit({ edit: false, value: board.title }), [board]);
+
+  //state for
+  const [createColumn, setCreateColumn] = useState({
+    edit: false,
+    title: 'New Column',
+  });
 
   //store columns/cards as component state
   const [columns, setColumns] = useState(
@@ -50,18 +64,39 @@ const Board = ({
   );
 
   //update columns when cards change in redux store
-  useEffect(
-    () =>
-      setColumns(
-        board.columns.map((column) => ({
-          name: column,
-          cards: board.cards.filter((c) => c.column.localeCompare(column) == 0),
-        }))
-      ),
-    [board.cards]
-  );
+  useEffect(() => {
+    setColumns(
+      board.columns.map((column) => ({
+        name: column,
+        cards: board.cards.filter((c) => c.column.localeCompare(column) == 0),
+      }))
+    );
+  }, [board.cards]);
 
-  //column adding/editing/deleting ================
+  //Board Editing ================
+  const onTitleChange = async (e, editTitle) => {
+    e.preventDefault();
+
+    setTitleEdit({ ...titleEdit, value: editTitle });
+  };
+
+  const onTitleSubmit = (e, newTitle) => {
+    e.preventDefault();
+
+    if (newTitle.trim() && newTitle.trim().localeCompare('') !== 0) {
+      onEditBoard(board._id, {
+        ...board,
+        title: newTitle.trim(),
+      });
+      setTitleEdit({
+        ...newTitle,
+        edit: false,
+        value: newTitle.trim(),
+      });
+    } else {
+      setTitleEdit({ edit: false, value: board.title });
+    }
+  };
 
   // Card adding/editing/deleting ==================
   const onAddCard = async (e) => {
@@ -79,8 +114,6 @@ const Board = ({
   };
 
   const onEditCard = async (e, cardId) => {
-    e.preventDefault();
-
     const { title, column } = cardModal;
 
     //if title is empty
@@ -147,20 +180,30 @@ const Board = ({
 
     const column = destination.droppableId;
 
-    await onEditCard(card._id, { title, column });
+    await editCard(card._id, { title, column });
   };
 
   return (
     <Fragment>
       <Container>
         <Row id='boardHeader'>
-          <h3>
-            {board.title}
-            <i
-              class='fas fa-ellipsis-h'
-              onClick={() => setBoardModal(true)}
-            ></i>
-          </h3>
+          {titleEdit.edit ? (
+            <TextEdit
+              customClasses='editTitle'
+              onSubmit={(e, title) => onTitleSubmit(e, title)}
+              onChange={(e, editTitle) => onTitleChange(e, editTitle)}
+              onExit={() => setTitleEdit({ ...titleEdit, edit: false })}
+              editValue={titleEdit.value}
+            />
+          ) : (
+            <h3>
+              {board.title}
+              <i
+                class='fas fa-pencil'
+                onClick={() => setTitleEdit({ ...titleEdit, edit: true })}
+              ></i>
+            </h3>
+          )}
           {owner ? (
             <p>
               <a
@@ -212,8 +255,26 @@ const Board = ({
             ))}
             {owner && (
               <Col className='boardColumn'>
-                <h6>Add Column</h6>
-                <Button className='addColumn'>
+                {createColumn.edit ? (
+                  <TextEdit
+                    customClasses='editTitle'
+                    onSubmit={(e, title) => onTitleSubmit(e, title)}
+                    onChange={(e, editTitle) => onTitleChange(e, editTitle)}
+                    onExit={() =>
+                      setCreateColumn({ ...createColumn, edit: false })
+                    }
+                    editValue={titleEdit.value}
+                  />
+                ) : (
+                  <h6>Add Column</h6>
+                )}
+
+                <Button
+                  className='addColumn'
+                  onClick={(e) =>
+                    setCreateColumn({ ...createColumn, edit: true })
+                  }
+                >
                   <i className='fas fa-plus'></i>
                 </Button>
               </Col>
@@ -275,37 +336,6 @@ const Board = ({
             Update
           </Button>
           <Button variant='outline-danger' onClick={closeCardModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      <Modal
-        id='boardModal'
-        show={boardModal}
-        onHide={() => setBoardModal(false)}
-      >
-        <Modal.Header closeButton>
-          <h3>{board.title}</h3>
-          <h6>Board Details</h6>
-        </Modal.Header>
-        <Modal.Body>
-          <ListGroup>
-            <ListGroup.Item>Columns</ListGroup.Item>
-            {board.columns.map((c) => (
-              <ListGroup.Item>{c}</ListGroup.Item>
-            ))}
-          </ListGroup>
-
-          <ListGroup>
-            <ListGroup.Item>Collaborators</ListGroup.Item>
-            {board.users.map((u) => (
-              <ListGroup.Item>{u.user}</ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant='outline-danger' onClick={() => setBoardModal(false)}>
             Close
           </Button>
         </Modal.Footer>

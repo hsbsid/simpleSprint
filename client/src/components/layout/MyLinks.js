@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-const MyLinks = () => {
+const MyLinks = (props) => {
   return (
     <div>
+      <Fragment>{props.children}</Fragment>
       <a href='http://haseebsiddiqui.ca'>
         <i class='fas fa-globe'></i>
       </a>

@@ -1,24 +1,15 @@
 #Navbar {
+  z-index: 1;
   border-bottom: 2px solid lightgrey;
   margin: 0;
   background: #fff;
-  width: 100vw;
+  padding: 0 40px 0 20px;
 
-  #logo {
-    color: #0052cc;
-    font-weight: bold;
-    font-size: 22px;
-
-    .badge {
-      margin-left: 8px;
-      font-size: 8px;
-      margin-top: 0;
-    }
-  }
-
-  .container {
-    padding-right: 0;
-    margin: 0 50px;
+  .navContainer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    margin: 0;
     width: 100%;
   }
 

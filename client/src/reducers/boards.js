@@ -4,10 +4,10 @@ import {
   LOAD_BOARD,
   BOARD_CREATED,
   BOARD_DELETED,
+  BOARD_EDITED,
   CARD_CREATED,
   EDIT_CARD,
   CARD_DELETED,
-  BOARD_LOADING,
 } from '../actions/types';
 
 const initialState = {
@@ -20,19 +20,23 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case BOARD_LOADING:
-      return { ...state, loading: true };
     case LOAD_BOARD:
       return { ...state, board: { ...payload, loading: false } };
     case LOAD_ALL_BOARDS:
       return { ...state, boards: payload, loading: false };
     case BOARD_CREATED:
       return { ...state, boards: [...state.boards, payload] };
+    case BOARD_EDITED:
+      return {
+        ...state,
+        boards: state.boards.map((b) => (b._id === payload._id ? payload : b)),
+        board: { ...state.board, ...payload },
+      };
     case BOARD_DELETED:
       return {
         ...state,
         boards: [...state.boards.filter((b) => b._id !== payload)],
-        board: { loading: false },
+        board: { loading: true },
       };
     case CARD_CREATED:
       return {

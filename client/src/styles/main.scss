@@ -1,4 +1,7 @@
 @import './colors.scss';
+@import './navbar.scss';
+@import './auth.scss';
+@import './dashboard.scss';
 
 body {
   background: linear-gradient(4deg, #0abaff 0%, #0c2c8c 100%);
@@ -6,6 +9,7 @@ body {
 }
 
 .toast {
+  z-index: 10;
   opacity: 30%;
   position: absolute;
   bottom: 30px;
@@ -106,6 +110,43 @@ body {
   }
 }
 
-@import './navbar.scss';
-@import './auth.scss';
-@import './dashboard.scss';
+.text-edit {
+  display: flex;
+  padding: 0;
+
+  input {
+    border: none;
+    border-radius: 0;
+    border-bottom: $grey solid 1px;
+    color: $darkgrey;
+    padding: 5px 0;
+
+    &:focus {
+      box-shadow: none;
+      border-bottom: $blue solid 1px;
+      color: $blue;
+    }
+  }
+
+  button {
+    border: none;
+    border-radius: 0;
+    border-bottom: $grey solid 1px;
+
+    background-color: none;
+    color: $darkgrey;
+
+    &:hover .fa-check {
+      color: $blue;
+    }
+
+    &:hover .fa-times {
+      color: $red;
+    }
+  }
+
+  input:focus + button,
+  input:focus + button + button {
+    border-bottom: $blue solid 1px;
+  }
+}

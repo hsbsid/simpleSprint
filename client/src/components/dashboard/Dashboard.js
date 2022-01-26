@@ -8,8 +8,7 @@ import {
   getAllBoards,
   getBoard,
   deleteBoard,
-  addCard,
-  editCard,
+  editBoard,
 } from '../../actions/boards';
 
 //components
@@ -33,8 +32,7 @@ const Dashboard = ({
   getAllBoards,
   getBoard,
   deleteBoard,
-  addCard,
-  editCard,
+  editBoard,
 }) => {
   //get board id from the dynamic url
   const { id } = useParams();
@@ -59,8 +57,12 @@ const Dashboard = ({
   });
 
   //if boards are not being loaded, and no id is provided (in url) OR the board loaded is null (id is invalid)
+  //redirect to the user's latest board
   if (
-    (!boards.loading && !id) ||
+    (!boards.loading &&
+      (!id ||
+        (id.localeCompare('createBoard') != 0 &&
+          !boards.boards.find((b) => b._id == id)))) ||
     (!boards.board.loading && !boards.board._id)
   ) {
     //if the user has no boards
@@ -74,6 +76,11 @@ const Dashboard = ({
     return <Redirect to={`/dashboard/${firstId}`} />;
   }
 
+  //edit board
+  const onEditBoard = async (boardId, newBoardData) => {
+    await editBoard(boardId, newBoardData);
+  };
+
   //delete/remove functions
   const onDeleteBoard = async (e, id) => {
     e.preventDefault();
@@ -82,43 +89,47 @@ const Dashboard = ({
     await deleteBoard(id);
   };
 
-  const onLeaveBoard = async (e, id) => {
-    e.preventDefault();
-
-    console.log(`Removing ${user._id} from Board ${id}`);
-  };
-
   return !boards.loading ? (
     <Fragment>
       <Container id='Dashboard' fluid>
-        <Row>
-          <Navbar></Navbar>
-        </Row>
-        <Row lg={10} md={10}>
-          <Col style={{ display: 'flex', overflow: 'hidden' }} lg={2} md={2}>
+        <Row fluid>
+          <Col
+            className='col'
+            lg={2}
+            md={2}
+            style={{ display: 'flex', overflow: 'hidden' }}
+          >
             <Sidebar loading boardList={boards.boards} />
           </Col>
-          <Col id='BoardDisplay' lg={10} md={10}>
-            {id === 'createBoard' ? (
-              <CreateBoard />
-            ) : !boards.board.loading && boards.board ? (
-              <Board
-                board={boards.board}
-                owner={
-                  boards.board.users.filter(
-                    (u) =>
-                      u.user === user._id &&
-                      u.permission.localeCompare('Owner') === 0
-                  ).length > 0
-                }
-                onDeleteBoard={(id, type) =>
-                  setDeleteModal({ show: true, type: type, id: id })
-                }
-                onLeaveBoard={onLeaveBoard}
-              />
-            ) : (
-              <Loading />
-            )}
+          <Col className='col'>
+            <Row>
+              <Navbar></Navbar>
+            </Row>
+            <Row id='BoardDisplay'>
+              {id === 'createBoard' ? (
+                <CreateBoard />
+              ) : !boards.board.loading && boards.board ? (
+                <Board
+                  board={boards.board}
+                  owner={
+                    boards.board.users.filter(
+                      (u) =>
+                        u.user === user._id &&
+                        u.permission.localeCompare('Owner') === 0
+                    ).length > 0
+                  }
+                  onEditBoard={(id, data) => onEditBoard(id, data)}
+                  onDeleteBoard={(id, type) =>
+                    setDeleteModal({ show: true, type: type, id: id })
+                  }
+                  onLeaveBoard={(id, type) =>
+                    setDeleteModal({ show: true, type: type, id: id })
+                  }
+                />
+              ) : (
+                <Loading />
+              )}
+            </Row>
           </Col>
         </Row>
       </Container>
@@ -153,8 +164,7 @@ Dashboard.propTypes = {
   getAllBoards: PropTypes.func.isRequired,
   getBoard: PropTypes.func.isRequired,
   deleteBoard: PropTypes.func.isRequired,
-  addCard: PropTypes.func.isRequired,
-  editCard: PropTypes.func.isRequired,
+  editBoard: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -166,6 +176,5 @@ export default connect(mapStateToProps, {
   getAllBoards,
   getBoard,
   deleteBoard,
-  addCard,
-  editCard,
+  editBoard,
 })(Dashboard);

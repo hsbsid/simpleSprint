@@ -7,7 +7,7 @@ import { getAllUsers } from '../../actions/auth';
 import { createBoard } from '../../actions/boards';
 import { setAlert } from '../../actions/alert';
 
-import SearchBar from '../layout/SearchBar';
+import SearchBar from '../inputs/SearchBar';
 import Loading from '../layout/Loading';
 
 import Stack from 'react-bootstrap/Stack';
@@ -49,7 +49,7 @@ const CreateBoard = (props) => {
   }, []);
 
   const titleOnChange = (e) => {
-    setFormData({ ...formData, title: e.target.value.trim() });
+    setFormData({ ...formData, title: e.target.value });
   };
 
   //when a collaborator is added from the search bar
@@ -146,7 +146,7 @@ const CreateBoard = (props) => {
       permission: 'Collaborator',
     }));
 
-    const newId = await createBoard({ title, users, columns });
+    const newId = await createBoard({ title: title.trim(), users, columns });
 
     setFormData({ ...formData, redirect: `/dashboard/${newId}` });
   };

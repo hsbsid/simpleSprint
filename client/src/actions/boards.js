@@ -4,6 +4,7 @@ import {
   LOAD_BOARD,
   BOARD_CREATED,
   BOARD_DELETED,
+  BOARD_EDITED,
   CARD_CREATED,
   EDIT_CARD,
   CARD_DELETED,
@@ -53,13 +54,33 @@ export const getBoard = (id) => async (dispatch) => {
   }
 };
 
-export const createBoard = (boardFormData) => async (dispatch) => {
+export const createBoard = (boardData) => async (dispatch) => {
   try {
-    const res = await api.post('/boards', boardFormData);
+    const res = await api.post('/boards', boardData);
 
     dispatch({ type: BOARD_CREATED, payload: res.data });
 
     dispatch(setAlert('Board Created', 'success'));
+
+    return res.data._id;
+  } catch (error) {
+    const errors = error.response.data.errors;
+
+    errors.forEach((e) => {
+      dispatch(setAlert(e.msg, 'danger'));
+    });
+
+    dispatch({
+      type: BOARD_ERROR,
+    });
+  }
+};
+
+export const editBoard = (boardId, newBoardData) => async (dispatch) => {
+  try {
+    const res = await api.put(`/boards/${boardId}`, newBoardData);
+
+    dispatch({ type: BOARD_EDITED, payload: res.data });
 
     return res.data._id;
   } catch (error) {

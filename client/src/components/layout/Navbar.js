@@ -11,16 +11,21 @@ import BSNavbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Badge from 'react-bootstrap/Badge';
+import SearchBar from '../inputs/SearchBar';
 
-const Navbar = ({ auth, logout }) => {
+const Navbar = ({ auth, logout, boards }) => {
   if (!auth.loading && auth.authenticated) {
     return (
       <Fragment>
         <BSNavbar sticky='top' className='navbar-light' id='Navbar'>
-          <Container>
-            <h1 id='logo'>
-              simpleSprint<Badge bg='primary'>Demo</Badge>
-            </h1>
+          <div className='navContainer'>
+            <SearchBar
+              label='Search my boards...'
+              table={boards.boards.map((b) => ({ id: b._id, value: b.title }))}
+              onSelectResult={(result) =>
+                console.log(`Searched ${result.value}`)
+              }
+            />
             <Dropdown>
               <Dropdown.Toggle className='avatarBox'>
                 <div className='avatar'>{auth.user.name[0]}</div>
@@ -35,7 +40,7 @@ const Navbar = ({ auth, logout }) => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
-          </Container>
+          </div>
         </BSNavbar>
       </Fragment>
     );
@@ -46,9 +51,10 @@ const Navbar = ({ auth, logout }) => {
 
 Navbar.propTypes = {
   auth: PropTypes.object.isRequired,
+  boards: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => ({ auth: state.auth });
+const mapStateToProps = (state) => ({ auth: state.auth, boards: state.boards });
 
 export default connect(mapStateToProps, { logout })(Navbar);

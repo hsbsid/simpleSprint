@@ -86,10 +86,6 @@ export const registerDemo = () => async (dispatch) => {
     const res = await api.post('/users/demo');
 
     dispatch({
-      type: BOARD_LOADING,
-    });
-
-    dispatch({
       type: AUTH_SUCCESS,
       payload: res.data,
     });
