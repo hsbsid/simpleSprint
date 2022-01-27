@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 const TextEdit = ({
+  onBlur,
   editValue,
   onSubmit,
   onChange,
@@ -14,10 +15,12 @@ const TextEdit = ({
   return (
     <Fragment>
       <Form
-        className={`text-edit customClasses`}
+        className={`text-edit ${customClasses}`}
         onSubmit={(e) => onSubmit(e, value)}
       >
         <Form.Control
+          onBlur={() => onBlur()}
+          autoFocus
           type='text'
           value={value}
           onChange={(e) => {

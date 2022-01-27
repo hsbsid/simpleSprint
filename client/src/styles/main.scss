@@ -113,6 +113,7 @@ body {
 .text-edit {
   display: flex;
   padding: 0;
+  margin-top: -14px;
 
   input {
     border: none;
@@ -133,8 +134,8 @@ body {
     border-radius: 0;
     border-bottom: $grey solid 1px;
 
-    background-color: none;
-    color: $darkgrey;
+    background: none !important;
+    color: $grey;
 
     &:hover .fa-check {
       color: $blue;
@@ -149,4 +150,36 @@ body {
   input:focus + button + button {
     border-bottom: $blue solid 1px;
   }
+}
+
+//sliding button styling
+//from https://codepen.io/Chen0682/pen/Rveoom
+.slide {
+  position: relative;
+  overflow: hidden;
+}
+
+.slideContent {
+  position: relative;
+  transition: 0.5s;
+}
+
+.slide::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 130%;
+  height: 55px;
+  background-color: $blue;
+  transform: translate(-110%, 0) skew(-30deg);
+  transition: 0.5s;
+}
+
+.slide:hover .text {
+  color: #fff;
+}
+
+.slide:hover::before {
+  transform: translate(-5%, 0) skew(-15deg);
 }

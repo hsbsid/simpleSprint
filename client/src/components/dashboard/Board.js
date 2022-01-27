@@ -46,14 +46,17 @@ const Board = ({
     value: board.title,
   });
 
-  //reset edit state on new board
-  useEffect(() => setTitleEdit({ edit: false, value: board.title }), [board]);
-
-  //state for
+  //state for creating column
   const [createColumn, setCreateColumn] = useState({
     edit: false,
-    title: 'New Column',
+    value: 'Enter column title',
   });
+
+  //reset edit state on new board
+  useEffect(() => {
+    setTitleEdit({ edit: false, value: board.title });
+    setCreateColumn({ edit: false, value: 'Enter column title' });
+  }, [board]);
 
   //store columns/cards as component state
   const [columns, setColumns] = useState(
@@ -74,17 +77,12 @@ const Board = ({
   }, [board.cards]);
 
   //Board Editing ================
-  const onTitleChange = async (e, editTitle) => {
-    e.preventDefault();
 
-    setTitleEdit({ ...titleEdit, value: editTitle });
-  };
-
-  const onTitleSubmit = (e, newTitle) => {
+  const onTitleSubmit = async (e, newTitle) => {
     e.preventDefault();
 
     if (newTitle.trim() && newTitle.trim().localeCompare('') !== 0) {
-      onEditBoard(board._id, {
+      await onEditBoard(board._id, {
         ...board,
         title: newTitle.trim(),
       });
@@ -96,6 +94,23 @@ const Board = ({
     } else {
       setTitleEdit({ edit: false, value: board.title });
     }
+  };
+
+  const onColumnSubmit = async (e, newColumnTitle) => {
+    e.preventDefault();
+
+    if (
+      newColumnTitle.trim() &&
+      newColumnTitle.trim().localeCompare('') !== 0
+    ) {
+      console.log(newColumnTitle);
+      await onEditBoard(board._id, {
+        ...board,
+        columns: [...board.columns, newColumnTitle.trim()],
+      });
+    }
+
+    setTitleEdit({ edit: false, value: 'Enter column title' });
   };
 
   // Card adding/editing/deleting ==================
@@ -191,8 +206,13 @@ const Board = ({
             <TextEdit
               customClasses='editTitle'
               onSubmit={(e, title) => onTitleSubmit(e, title)}
-              onChange={(e, editTitle) => onTitleChange(e, editTitle)}
+              onChange={(e, editTitle) =>
+                setTitleEdit({ ...titleEdit, value: editTitle })
+              }
               onExit={() => setTitleEdit({ ...titleEdit, edit: false })}
+              onBlur={() =>
+                setTitleEdit({ ...titleEdit, value: board.title, edit: false })
+              }
               editValue={titleEdit.value}
             />
           ) : (
@@ -257,13 +277,25 @@ const Board = ({
               <Col className='boardColumn'>
                 {createColumn.edit ? (
                   <TextEdit
-                    customClasses='editTitle'
-                    onSubmit={(e, title) => onTitleSubmit(e, title)}
-                    onChange={(e, editTitle) => onTitleChange(e, editTitle)}
+                    customClasses='newColumnEdit'
+                    onSubmit={(e, columnTitle) => {
+                      console.log(columnTitle);
+                      onColumnSubmit(e, columnTitle);
+                    }}
+                    onChange={(e, columnTitle) =>
+                      setCreateColumn({ ...createColumn, value: columnTitle })
+                    }
                     onExit={() =>
                       setCreateColumn({ ...createColumn, edit: false })
                     }
-                    editValue={titleEdit.value}
+                    onBlur={() =>
+                      setCreateColumn({
+                        ...createColumn,
+                        value: 'Enter column title',
+                        edit: false,
+                      })
+                    }
+                    editValue={createColumn.value}
                   />
                 ) : (
                   <h6>Add Column</h6>

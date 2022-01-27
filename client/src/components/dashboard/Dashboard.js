@@ -56,8 +56,11 @@ const Dashboard = ({
     id: null,
   });
 
-  //if boards are not being loaded, and no id is provided (in url) OR the board loaded is null (id is invalid)
-  //redirect to the user's latest board
+  //if boards are not being loaded and:
+  //no id is provided
+  //or the id does not exist in the list of boards (and is not 'createBoard')
+  //or the board loaded is undefined/null
+  //then redirect to the first board in the user's list of boards
   if (
     (!boards.loading &&
       (!id ||
@@ -93,15 +96,10 @@ const Dashboard = ({
     <Fragment>
       <Container id='Dashboard' fluid>
         <Row fluid>
-          <Col
-            className='col'
-            lg={2}
-            md={2}
-            style={{ display: 'flex', overflow: 'hidden' }}
-          >
+          <Col className='col' lg={2} md={2} style={{ display: 'flex' }}>
             <Sidebar loading boardList={boards.boards} />
           </Col>
-          <Col className='col'>
+          <Col className='col' style={{ padding: 0 }}>
             <Row>
               <Navbar></Navbar>
             </Row>
@@ -133,6 +131,7 @@ const Dashboard = ({
           </Col>
         </Row>
       </Container>
+
       <Modal show={deleteModal.show}>
         <Modal.Header>Are you sure?</Modal.Header>
         <Modal.Footer>

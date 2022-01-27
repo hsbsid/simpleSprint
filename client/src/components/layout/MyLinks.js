@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 
 const MyLinks = (props) => {
   return (
-    <div>
-      <Fragment>{props.children}</Fragment>
+    <div className='MyLinks'>
+      <h6>{props.children}</h6>
       <a href='http://haseebsiddiqui.ca'>
         <i class='fas fa-globe'></i>
       </a>

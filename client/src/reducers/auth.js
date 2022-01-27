@@ -3,6 +3,7 @@ import {
   AUTH_SUCCESS,
   AUTH_ERROR,
   USER_LOADED,
+  CHECKING_AUTH,
   LOGOUT,
 } from '../actions/types';
 
@@ -17,6 +18,8 @@ export default function (state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case CHECKING_AUTH:
+      return { ...state, loading: true };
     case AUTH_SUCCESS: //set the token in localstorage, update the state
       localStorage.setItem('token', payload.token);
       return {

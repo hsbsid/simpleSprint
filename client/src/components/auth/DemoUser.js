@@ -21,8 +21,8 @@ const DemoUser = ({ auth, registerDemo, setAlert }) => {
   const [boardId, setBoardId] = useState(null);
 
   //if the user is logged in, redirect them
-  if (auth.authenticated && boardId) {
-    return <Redirect to={`/dashboard/${boardId}`} />;
+  if (auth.authenticated) {
+    return <Redirect to={`/dashboard${auth.user.demo && `/?demo=true`}`} />;
   }
 
   return (

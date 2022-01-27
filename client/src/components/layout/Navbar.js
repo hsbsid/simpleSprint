@@ -20,6 +20,7 @@ const Navbar = ({ auth, logout, boards }) => {
         <BSNavbar sticky='top' className='navbar-light' id='Navbar'>
           <div className='navContainer'>
             <SearchBar
+              className='navSearch'
               label='Search my boards...'
               table={boards.boards.map((b) => ({ id: b._id, value: b.title }))}
               onSelectResult={(result) =>

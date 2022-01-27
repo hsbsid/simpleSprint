@@ -9,17 +9,16 @@
 
 #Sidebar {
   z-index: 2;
-  height: 97vh;
+  height: 99vh;
   width: 100%;
   color: $deepdarkblue;
   padding: 2em !important;
   border: 2px solid $darkgrey;
   background: $darkblue;
-  border-radius: 10px;
+  border-radius: 5px;
   border: #000;
-  box-shadow: rgba(60, 64, 67, 0.8) 0px 1px 2px 0px,
-    rgba(60, 64, 67, 0.4) 0px 2px 6px 2px;
-  margin: 1.5vh 10px;
+  box-shadow: rgba(99, 99, 99, 0.4) 0px 2px 8px 0px;
+  margin: 0.5vh 5px;
 
   #logo {
     display: flex;
@@ -47,14 +46,17 @@
     li.nav-link {
       background: 0 0;
       border: 0;
-      border-radius: 0.25rem;
+      border-radius: 5px;
       font-size: 16px;
       color: #fff;
       margin-top: 10px;
 
       &.selected {
         background: $skyblue;
-        border-radius: 40px;
+
+        &:before {
+          display: none;
+        }
 
         a {
           color: $deepdarkblue;
@@ -77,6 +79,18 @@
           color: $skyblue;
         }
       }
+    }
+  }
+
+  .MyLinks {
+    h6 {
+      font-size: 14px;
+      color: $skyblue;
+    }
+
+    a {
+      margin-right: 5px;
+      font-size: 20px;
     }
   }
 }
@@ -241,7 +255,7 @@
         &.isDragging {
           box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
             rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-          background-color: $bluegrey;
+          background-color: $blue;
           h6 {
             color: #fff !important;
           }
@@ -271,6 +285,18 @@
         &:hover div i {
           display: inline;
         }
+      }
+    }
+
+    .text-edit.newColumnEdit {
+      * {
+        border-bottom: none;
+      }
+
+      input {
+        min-width: 16ch;
+        font-size: 12px;
+        text-transform: uppercase;
       }
     }
   }

@@ -2,7 +2,6 @@
   z-index: 1;
   border-bottom: 2px solid lightgrey;
   margin: 0;
-  background: #fff;
   padding: 0 40px 0 20px;
 
   .navContainer {
@@ -17,14 +16,14 @@
     padding: 5px 15px;
     border: none;
     border-radius: 10px;
-    box-shadow: rgba(60, 64, 67, 0.1) 0px 1px 2px 0px,
-      rgba(60, 64, 67, 0.05) 0px 1px 3px 1px;
+    box-shadow: rgba(60, 64, 67, 0.2) 0px 1px 2px 0px,
+      rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     background: #fff;
     color: #000;
 
     &:hover {
-      box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-        rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+      box-shadow: rgba(60, 64, 67, 0.3) 0px 2px 2px 0px,
+        rgba(60, 64, 67, 0.15) 0px 2px 3px 1px;
       background: $lightgrey;
     }
 

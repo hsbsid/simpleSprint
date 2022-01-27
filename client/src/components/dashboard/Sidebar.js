@@ -21,11 +21,13 @@ const Sidebar = ({ boardList }) => {
           {boardList.map((board) => (
             <li
               key={board._id}
-              className={`nav-link ${
+              className={`nav-link slide ${
                 window.location.pathname.includes(board._id) && 'selected'
               }`}
             >
-              <Link to={board._id}>{board.title}</Link>
+              <Link className='slideContent' to={board._id}>
+                {board.title}
+              </Link>
             </li>
           ))}
           <li key='createBoard'>

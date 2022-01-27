@@ -3,6 +3,7 @@ export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const AUTH_FAIL = 'AUTH_FAIL';
 export const USER_LOADED = 'USER_LOADED';
 export const AUTH_ERROR = 'AUTH_ERROR';
+export const CHECKING_AUTH = 'CHECKING_AUTH';
 export const LOGOUT = 'LOGOUT';
 
 //Board Actions
