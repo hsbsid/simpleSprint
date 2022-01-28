@@ -9,7 +9,6 @@ import {
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import DemoUser from './components/auth/DemoUser';
-import Navbar from './components/layout/Navbar';
 import Alert from './components/layout/Alert';
 import Dashboard from './components/dashboard/Dashboard';
 import Loading from './components/layout/Loading';

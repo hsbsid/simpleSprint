@@ -22,7 +22,7 @@ const DemoUser = ({ auth, registerDemo, setAlert }) => {
 
   //if the user is logged in, redirect them
   if (auth.authenticated) {
-    return <Redirect to={`/dashboard${auth.user.demo && `/?demo=true`}`} />;
+    return <Redirect to='/dashboard' />;
   }
 
   return (

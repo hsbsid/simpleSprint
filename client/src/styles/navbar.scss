@@ -3,6 +3,7 @@
   border-bottom: 2px solid lightgrey;
   margin: 0;
   padding: 0 40px 0 20px;
+  height: 11vh;
 
   .navContainer {
     display: flex;
@@ -15,7 +16,7 @@
   .avatarBox {
     padding: 5px 15px;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     box-shadow: rgba(60, 64, 67, 0.2) 0px 1px 2px 0px,
       rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
     background: #fff;
@@ -47,6 +48,19 @@
     .fas {
       font-size: 10px;
       color: $darkgrey;
+    }
+  }
+
+  .dropdown .dropdown-menu {
+    border-radius: 5px;
+    padding: 0;
+    .dropdown-item {
+      border-radius: 5px;
+      padding: 0;
+
+      .nav-link i {
+        margin-right: 10px;
+      }
     }
   }
 }

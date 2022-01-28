@@ -2,15 +2,13 @@ import api from '../utils/api';
 import {
   AUTH_FAIL,
   AUTH_SUCCESS,
-  SET_ALERT,
   USER_LOADED,
   AUTH_ERROR,
   LOGOUT,
-  BOARD_LOADING,
   CHECKING_AUTH,
 } from '../actions/types';
 import { setAlert } from './alert';
-import { createBoard, addCard } from './boards';
+// import { createBoard, addCard, getAllBoards } from './boards';
 import setAuthToken from '../utils/setAuthToken';
 
 //function to get all users
@@ -88,13 +86,8 @@ export const registerDemo = () => async (dispatch) => {
 
     const res = await api.post('/users/demo');
 
-    dispatch({
-      type: AUTH_SUCCESS,
-      payload: res.data,
-    });
-
-    //load the user into state based on token
-    dispatch(loadUser());
+    localStorage.setItem('token', res.data.token);
+    setAuthToken(res.data.token);
 
     //add a demo board to the user
     const demoBoardId = (
@@ -144,6 +137,15 @@ export const registerDemo = () => async (dispatch) => {
     exampleCards.forEach(async (card) => {
       await api.post(`/boards/${exampleBoardId}/cards`, card);
     });
+
+    //add the user to auth
+    dispatch({
+      type: AUTH_SUCCESS,
+      payload: res.data,
+    });
+
+    //load the user into state based on token
+    dispatch(loadUser());
 
     return res.data._id;
   } catch (error) {

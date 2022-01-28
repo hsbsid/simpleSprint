@@ -97,7 +97,10 @@ const Dashboard = ({
       <Container id='Dashboard' fluid>
         <Row fluid>
           <Col className='col' lg={2} md={2} style={{ display: 'flex' }}>
-            <Sidebar loading boardList={boards.boards} />
+            <Sidebar
+              loading
+              boardList={boards.boards.sort((a, b) => a.date - b.date)}
+            />
           </Col>
           <Col className='col' style={{ padding: 0 }}>
             <Row>

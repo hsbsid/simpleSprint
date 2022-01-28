@@ -98,9 +98,9 @@
 #BoardDisplay {
   display: flex;
   padding: 2em !important;
-  height: 100%;
+  height: 88vh;
   padding-right: 15px;
-  overflow: scroll;
+  overflow-y: scroll;
   margin-left: 0;
 
   .container {

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import Loading from '../layout/Loading';
 
 function PrivateRoute({
   component: Component,
@@ -12,7 +13,9 @@ function PrivateRoute({
     <Route
       {...rest}
       render={(props) =>
-        !loading && !authenticated ? (
+        loading ? (
+          <Loading />
+        ) : !authenticated ? (
           <Redirect to='/login' />
         ) : (
           <Component {...props} />

@@ -36,6 +36,7 @@ const Navbar = ({ auth, logout, boards }) => {
               <Dropdown.Menu>
                 <Dropdown.Item href='#/action-1'>
                   <Link className='nav-link' to='/login' onClick={logout}>
+                    <i className='fas fa-sign-out'></i>
                     Logout
                   </Link>
                 </Dropdown.Item>
