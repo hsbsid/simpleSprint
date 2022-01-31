@@ -100,6 +100,17 @@ router.post(
 
     //create new board with standard columns, and a dummy swimlane
     let { title, users, columns } = req.body;
+
+    //check if columns have duplicates
+    if (columns.length !== new Set(columns).size) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'Duplicate Column names' }] });
+    }
+
+    //convert all column names to lowercase
+    columns = columns.map((c) => c.toLowerCase());
+
     const swimlanes = [{ title: 'Main', users: [{ user: user.id }] }];
     users = [...users, { user: user.id, permission: 'Owner' }]; // add this user as creator of the board
 
@@ -177,8 +188,18 @@ router.put(
     //get user
     const user = req.user;
     //get all board params
-    const { users, title, swimlanes, columns } = req.body;
+    let { users, title, swimlanes, columns } = req.body;
     let newBoard = { users, title, swimlanes, columns };
+
+    // //check if columns have duplicates
+    // if (columns.length !== new Set(columns).size) {
+    //   return res
+    //     .status(400)
+    //     .json({ errors: [{ msg: 'Duplicate Column names' }] });
+    // }
+
+    //convert all column names to lowercase
+    columns = columns.map((c) => c.toLowerCase());
 
     try {
       //find the current Board
@@ -200,7 +221,7 @@ router.put(
       }
 
       //board does exist and belongs to the user, edit it
-      board.overwrite({ ...board, ...newBoard });
+      board.overwrite({ ...board.toObject(), ...newBoard });
 
       board = await board.save();
 

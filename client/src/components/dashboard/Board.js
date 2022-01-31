@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 //action
 import { setAlert } from '../../actions/alert';
+import { getBoard } from '../../actions/boards';
 //actions
 import { addCard, editCard, deleteCard } from '../../actions/boards';
 
@@ -29,7 +30,7 @@ const Board = ({
   owner,
   onEditBoard,
   onDeleteBoard,
-  onLeaveBoard,
+  getBoard,
 }) => {
   //create states for the modals
   const [cardModal, setCardModal] = useState({
@@ -53,7 +54,7 @@ const Board = ({
   });
 
   //reset edit state on new board
-  useEffect(() => {
+  useEffect(async () => {
     setTitleEdit({ edit: false, value: board.title });
     setCreateColumn({ edit: false, value: 'Enter column title' });
   }, [board]);
@@ -74,7 +75,7 @@ const Board = ({
         cards: board.cards.filter((c) => c.column.localeCompare(column) == 0),
       }))
     );
-  }, [board.cards]);
+  }, [board.columns, board.cards]);
 
   //Board Editing ================
 
@@ -99,18 +100,74 @@ const Board = ({
   const onColumnSubmit = async (e, newColumnTitle) => {
     e.preventDefault();
 
+    //if the new title is not blank
     if (
       newColumnTitle.trim() &&
       newColumnTitle.trim().localeCompare('') !== 0
     ) {
-      console.log(newColumnTitle);
+      if (
+        board.columns.find((c) => c.localeCompare(newColumnTitle.trim()) == 0)
+      )
+        return setAlert('A column with that title already exists', 'warning');
+
       await onEditBoard(board._id, {
         ...board,
         columns: [...board.columns, newColumnTitle.trim()],
       });
+    } else {
+      setAlert('Column title cannot be blank', 'warning');
     }
+  };
 
-    setTitleEdit({ edit: false, value: 'Enter column title' });
+  const editColumnTitle = async (e, oldColumnTitle, newColumnTitle) => {
+    e.preventDefault();
+
+    //if the title is the same
+    if (
+      newColumnTitle
+        .toLowerCase()
+        .trim()
+        .localeCompare(oldColumnTitle.toLowerCase()) == 0
+    )
+      return;
+
+    //if the new title is not blank
+    if (
+      newColumnTitle.trim() &&
+      newColumnTitle.trim().localeCompare('') !== 0
+    ) {
+      if (
+        board.columns.find((c) => c.localeCompare(newColumnTitle.trim()) == 0)
+      )
+        return setAlert('A column with that title already exists', 'warning');
+
+      let newColumns = [...board.columns].map((c) =>
+        c.localeCompare(oldColumnTitle) == 0 ? newColumnTitle : c
+      );
+
+      await onEditBoard(board._id, {
+        ...board,
+        columns: [...newColumns],
+      });
+    } else {
+      setAlert('Column title cannot be blank', 'warning');
+    }
+  };
+
+  const onDeleteColumn = async (e, column) => {
+    e.preventDefault();
+
+    //filter out the column out of columns
+    const newColumns = [...board.columns].filter(
+      (c) => c.localeCompare(column) !== 0
+    );
+
+    await onEditBoard(board._id, {
+      ...board,
+      columns: [...newColumns],
+    });
+
+    setAlert('Column Removed');
   };
 
   // Card adding/editing/deleting ==================
@@ -129,6 +186,8 @@ const Board = ({
   };
 
   const onEditCard = async (e, cardId) => {
+    e.preventDefault();
+
     const { title, column } = cardModal;
 
     //if title is empty
@@ -248,6 +307,10 @@ const Board = ({
           <DragDropContext onDragEnd={onDragEnd}>
             {columns.map(({ name: col, cards }) => (
               <Column
+                onEditTitle={(e, oldTitle, newTitle) => {
+                  editColumnTitle(e, oldTitle, newTitle);
+                }}
+                onDeleteColumn={(e) => onDeleteColumn(e, col)}
                 onAddCard={() => {
                   setCardModal({
                     ...cardModal,
@@ -277,10 +340,13 @@ const Board = ({
               <Col className='boardColumn'>
                 {createColumn.edit ? (
                   <TextEdit
-                    customClasses='newColumnEdit'
+                    customClasses='columnEdit'
                     onSubmit={(e, columnTitle) => {
-                      console.log(columnTitle);
                       onColumnSubmit(e, columnTitle);
+                      setCreateColumn({
+                        edit: false,
+                        value: 'Enter column title',
+                      });
                     }}
                     onChange={(e, columnTitle) =>
                       setCreateColumn({ ...createColumn, value: columnTitle })
@@ -381,8 +447,13 @@ Board.propTypes = {
   addCard: PropTypes.func.isRequired,
   editCard: PropTypes.func.isRequired,
   deleteCard: PropTypes.func.isRequired,
+  getBoard: PropTypes.func.isRequired,
 };
 
-export default connect(null, { setAlert, addCard, editCard, deleteCard })(
-  Board
-);
+export default connect(null, {
+  setAlert,
+  addCard,
+  editCard,
+  deleteCard,
+  getBoard,
+})(Board);

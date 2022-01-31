@@ -5,9 +5,14 @@ const Loading = () => {
   return (
     <Fragment>
       <div id='Loading'>
-        <Spinner animation='border' role='status'>
+        {/* <Spinner animation='border' role='status'>
           <span className='visually-hidden'>Loading...</span>
-        </Spinner>
+        </Spinner> */}
+        <div className='loadingBlocks'>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
       </div>
     </Fragment>
   );

@@ -1,4 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://simpleSprintMain:SIx4cBakyDqipV1Q@cluster0.wfglq.mongodb.net/simpleSprint?retryWrites=true&w=majority",
+  "mongoURI": "mongodb+srv://simpleSprintMain:root@cluster0.wfglq.mongodb.net/simpleSprint?retryWrites=true&w=majority",
   "jwtSecret": "mybunnymylovely"
 }

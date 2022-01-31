@@ -99,7 +99,9 @@ const Dashboard = ({
           <Col className='col' lg={2} md={2} style={{ display: 'flex' }}>
             <Sidebar
               loading
-              boardList={boards.boards.sort((a, b) => a.date - b.date)}
+              boardList={boards.boards.sort(
+                (a, b) => new Date(a.date) < new Date(b.date)
+              )}
             />
           </Col>
           <Col className='col' style={{ padding: 0 }}>

@@ -26,7 +26,7 @@ const Sidebar = ({ boardList }) => {
               }`}
             >
               <Link className='slideContent' to={board._id}>
-                {board.title}
+                <div>{board.title}</div>
               </Link>
             </li>
           ))}

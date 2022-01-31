@@ -16,20 +16,29 @@ const TextEdit = ({
     <Fragment>
       <Form
         className={`text-edit ${customClasses}`}
-        onSubmit={(e) => onSubmit(e, value)}
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit(e, value);
+        }}
+        onBlur={() => onBlur()}
       >
         <Form.Control
-          onBlur={() => onBlur()}
           autoFocus
           type='text'
           value={value}
           onChange={(e) => {
             setValue(e.target.value);
-            onChange(e, value);
+            onChange(e, e.target.value);
           }}
           style={{ width: `${value.length + 0.5}ch` }}
         />
-        <Button type='submit'>
+        <Button
+          type='submit'
+          onMouseDown={(e) => {
+            e.preventDefault();
+            onSubmit(e, value);
+          }}
+        >
           <i className='fas fa-check'></i>
         </Button>
         <Button

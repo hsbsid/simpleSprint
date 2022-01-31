@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 //components
 import { Draggable } from 'react-beautiful-dnd';
@@ -8,7 +9,7 @@ import Popover from 'react-bootstrap/Popover';
 import Overlay from 'react-bootstrap/Overlay';
 
 const Card = (props) => {
-  const { title, id, index, onEditCard, onDeleteCard } = props;
+  const { title, id, date, index, onEditCard, onDeleteCard } = props;
 
   const [deletePopover, setDeletePopover] = useState(false);
 
