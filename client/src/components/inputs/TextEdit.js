@@ -8,6 +8,7 @@ const TextEdit = ({
   onSubmit,
   onChange,
   onExit,
+  placeholder = editValue,
   customClasses = '',
 }) => {
   const [value, setValue] = useState(editValue);
@@ -25,6 +26,7 @@ const TextEdit = ({
         <Form.Control
           autoFocus
           type='text'
+          placeholder={placeholder}
           value={value}
           onChange={(e) => {
             setValue(e.target.value);

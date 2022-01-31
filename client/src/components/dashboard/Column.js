@@ -48,14 +48,18 @@ const Column = (props) => {
         ) : (
           <h6>
             {props.title}
-            <i
-              className='fas fa-pencil'
-              onClick={(e) => setEditColumn({ ...editColumn, edit: true })}
-            ></i>
-            <i
-              className='fas fa-trash'
-              onClick={(e) => setDeleteModal(true)}
-            ></i>
+            {props.owner && (
+              <Fragment>
+                <i
+                  className='fas fa-pencil'
+                  onClick={(e) => setEditColumn({ ...editColumn, edit: true })}
+                ></i>
+                <i
+                  className='fas fa-trash'
+                  onClick={(e) => setDeleteModal(true)}
+                ></i>{' '}
+              </Fragment>
+            )}
           </h6>
         )}
         <Droppable droppableId={props.title}>

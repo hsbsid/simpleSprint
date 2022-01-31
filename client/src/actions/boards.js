@@ -159,6 +159,8 @@ export const editCard = (cardId, cardData) => async (dispatch) => {
     const res = await api.put(`/boards/cards/${cardId}`, cardData);
 
     dispatch({ type: EDIT_CARD, payload: res.data });
+
+    return res.data;
   } catch (error) {
     const errors = error.response.data.errors;
 

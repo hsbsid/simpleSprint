@@ -50,13 +50,13 @@ const Board = ({
   //state for creating column
   const [createColumn, setCreateColumn] = useState({
     edit: false,
-    value: 'Enter column title',
+    value: '',
   });
 
   //reset edit state on new board
   useEffect(async () => {
     setTitleEdit({ edit: false, value: board.title });
-    setCreateColumn({ edit: false, value: 'Enter column title' });
+    setCreateColumn({ edit: false, value: '' });
   }, [board]);
 
   //store columns/cards as component state
@@ -122,7 +122,7 @@ const Board = ({
   const editColumnTitle = async (e, oldColumnTitle, newColumnTitle) => {
     e.preventDefault();
 
-    //if the title is the same
+    // if the title is the same
     if (
       newColumnTitle
         .toLowerCase()
@@ -136,19 +136,31 @@ const Board = ({
       newColumnTitle.trim() &&
       newColumnTitle.trim().localeCompare('') !== 0
     ) {
-      if (
-        board.columns.find((c) => c.localeCompare(newColumnTitle.trim()) == 0)
-      )
+      newColumnTitle = newColumnTitle.toLowerCase().trim();
+
+      if (board.columns.find((c) => c.localeCompare(newColumnTitle) == 0))
         return setAlert('A column with that title already exists', 'warning');
 
       let newColumns = [...board.columns].map((c) =>
-        c.localeCompare(oldColumnTitle) == 0 ? newColumnTitle : c
+        c.localeCompare(oldColumnTitle) == 0 ? newColumnTitle.toLowerCase() : c
       );
 
       await onEditBoard(board._id, {
         ...board,
         columns: [...newColumns],
       });
+
+      //edit all the cards to point to the new column name
+      columns
+        .find((c) => c.name.localeCompare(oldColumnTitle) == 0)
+        .cards.forEach(async (card) => {
+          console.log(
+            await editCard(card._id, {
+              title: card.title,
+              column: newColumnTitle,
+            })
+          );
+        });
     } else {
       setAlert('Column title cannot be blank', 'warning');
     }
@@ -175,7 +187,7 @@ const Board = ({
     e.preventDefault();
 
     const { title, column } = cardModal;
-
+    console.log(column);
     //if title is empty
     if (!title || title.trim() === '') {
       return setAlert('Please enter a card title', 'danger');
@@ -277,10 +289,12 @@ const Board = ({
           ) : (
             <h3>
               {board.title}
-              <i
-                class='fas fa-pencil'
-                onClick={() => setTitleEdit({ ...titleEdit, edit: true })}
-              ></i>
+              {owner && (
+                <i
+                  class='fas fa-pencil'
+                  onClick={() => setTitleEdit({ ...titleEdit, edit: true })}
+                ></i>
+              )}
             </h3>
           )}
           {owner ? (
@@ -307,6 +321,7 @@ const Board = ({
           <DragDropContext onDragEnd={onDragEnd}>
             {columns.map(({ name: col, cards }) => (
               <Column
+                owner={owner}
                 onEditTitle={(e, oldTitle, newTitle) => {
                   editColumnTitle(e, oldTitle, newTitle);
                 }}
@@ -340,12 +355,13 @@ const Board = ({
               <Col className='boardColumn'>
                 {createColumn.edit ? (
                   <TextEdit
+                    placeholder='Enter column name'
                     customClasses='columnEdit'
                     onSubmit={(e, columnTitle) => {
                       onColumnSubmit(e, columnTitle);
                       setCreateColumn({
                         edit: false,
-                        value: 'Enter column title',
+                        value: '',
                       });
                     }}
                     onChange={(e, columnTitle) =>
@@ -357,7 +373,7 @@ const Board = ({
                     onBlur={() =>
                       setCreateColumn({
                         ...createColumn,
-                        value: 'Enter column title',
+                        value: '',
                         edit: false,
                       })
                     }
