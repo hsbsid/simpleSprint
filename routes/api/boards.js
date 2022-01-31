@@ -251,7 +251,8 @@ router.post(
 
     //create new card with values
     const boardId = req.params.boardId;
-    const { title, swimlane, column } = req.body;
+    let { title, swimlane, column } = req.body;
+    column = column.toLowerCase();
     let newCard = { board: boardId, title, column, users: [user._id] };
 
     try {
@@ -264,14 +265,6 @@ router.post(
           .status(404)
           .json({ errors: [{ msg: 'Board does not exist' }] });
       }
-
-      // //check if swimlane exists
-      // if (board.swimlanes.filter((s) => s.id == swimlane).length < 1) {
-      //   return res
-      //     .status(404)
-      //     .json({ errors: [{ msg: 'Swimlane does not exist' }] });
-      // }
-      //check if column exists
 
       if (!board.columns.includes(column)) {
         return res
@@ -319,7 +312,8 @@ router.put(
     const { cardId } = req.params;
 
     //get new card details
-    const { title, column } = req.body;
+    let { title, column } = req.body;
+    column = column.toLowerCase();
     let newCard = { title, column };
 
     try {

@@ -108,14 +108,14 @@ export const registerDemo = () => async (dispatch) => {
 
     //add some cards to the boards
     const demoCards = [
-      { title: 'To do', column: 'Backlog' },
-      { title: 'Task 1', column: 'Backlog' },
-      { title: 'Task 2', column: 'Backlog' },
-      { title: 'Doing', column: 'In Progress' },
-      { title: 'Goal B', column: 'In Progress' },
-      { title: 'Done', column: 'Done' },
-      { title: 'Goal A', column: 'Done' },
-      { title: 'Goal C', column: 'Blocked' },
+      { title: 'To do', column: 'backlog' },
+      { title: 'Task 1', column: 'backlog' },
+      { title: 'Task 2', column: 'backlog' },
+      { title: 'Doing', column: 'in progress' },
+      { title: 'Goal B', column: 'in progress' },
+      { title: 'Done', column: 'done' },
+      { title: 'Goal A', column: 'done' },
+      { title: 'Goal C', column: 'blocked' },
     ];
 
     const exampleCards = [
@@ -123,11 +123,11 @@ export const registerDemo = () => async (dispatch) => {
         title: 'Read 7 Habits of Highly Effective People by Stephen Covey',
         column: 'To Do',
       },
-      { title: 'Write Blog Post', column: 'To Do' },
-      { title: 'Read Range by David Epstein', column: 'Focus' },
-      { title: 'Edit newsletter', column: 'To Do' },
-      { title: "Post today's video", column: 'Completed' },
-      { title: "Send this week's newletter issue", column: 'Completed' },
+      { title: 'Write Blog Post', column: 'to do' },
+      { title: 'Read Range by David Epstein', column: 'focus' },
+      { title: 'Edit newsletter', column: 'to do' },
+      { title: "Post today's video", column: 'completed' },
+      { title: "Send this week's newletter issue", column: 'completed' },
     ];
 
     demoCards.forEach(async (card) => {
