@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const CardSchema = new mongoose.Schema({
+const ItemSchema = new mongoose.Schema({
   list: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'list',
@@ -15,12 +15,13 @@ const CardSchema = new mongoose.Schema({
     ref: 'user',
   },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now(),
+    default: null,
   },
 });
 
-module.exports = Card = mongoose.model('card', CardSchema);
+module.exports = Item = mongoose.model('item', CardSchema);
